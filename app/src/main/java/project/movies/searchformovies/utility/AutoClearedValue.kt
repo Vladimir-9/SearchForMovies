@@ -1,4 +1,4 @@
-package project.movies.searchformovies
+package project.movies.searchformovies.utility
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver

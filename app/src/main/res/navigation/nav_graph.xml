@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/displayingMovies"
-        android:name="project.movies.searchformovies.movies.DisplayingMovies"
+        android:name="project.movies.searchformovies.movies.MoviesFragment"
         android:label="displaying_movies_fragment"
         tools:layout="@layout/displaying_movies_fragment" />
 </navigation>

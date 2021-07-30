@@ -2,25 +2,25 @@ package project.movies.searchformovies.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import project.movies.searchformovies.remote.RemoteMoviesData
+import project.movies.searchformovies.remote.MoviesData
 
-class MoviesAdapter : AsyncListDifferDelegationAdapter<RemoteMoviesData>(MoviesDiffUtil()) {
+class MoviesAdapter : AsyncListDifferDelegationAdapter<MoviesData>(MoviesDiffUtil()) {
 
     init {
         delegatesManager.addDelegate(MoviesAdapterDelegate())
     }
 
-    class MoviesDiffUtil : DiffUtil.ItemCallback<RemoteMoviesData>() {
+    class MoviesDiffUtil : DiffUtil.ItemCallback<MoviesData>() {
         override fun areItemsTheSame(
-            oldItem: RemoteMoviesData,
-            newItem: RemoteMoviesData
+            oldItem: MoviesData,
+            newItem: MoviesData
         ): Boolean {
-            return oldItem.image == newItem.image
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: RemoteMoviesData,
-            newItem: RemoteMoviesData
+            oldItem: MoviesData,
+            newItem: MoviesData
         ): Boolean {
             return oldItem == newItem
         }

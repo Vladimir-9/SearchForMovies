@@ -8,10 +8,10 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.ItemMovieBinding
-import project.movies.searchformovies.remote.RemoteMoviesData
+import project.movies.searchformovies.remote.MoviesData
 
 class MoviesAdapterDelegate :
-    AbsListItemAdapterDelegate<RemoteMoviesData, RemoteMoviesData, MoviesAdapterDelegate.ViewHolder>() {
+    AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -19,7 +19,7 @@ class MoviesAdapterDelegate :
     }
 
     override fun onBindViewHolder(
-        item: RemoteMoviesData,
+        item: MoviesData,
         holder: ViewHolder,
         payloads: MutableList<Any>
     ) {
@@ -27,8 +27,8 @@ class MoviesAdapterDelegate :
     }
 
     override fun isForViewType(
-        item: RemoteMoviesData,
-        items: MutableList<RemoteMoviesData>,
+        item: MoviesData,
+        items: MutableList<MoviesData>,
         position: Int
     ): Boolean {
         return true
@@ -38,14 +38,23 @@ class MoviesAdapterDelegate :
 
         private lateinit var viewBinding: ItemMovieBinding
 
-        fun bind(movies: RemoteMoviesData) {
+        fun bind(movies: MoviesData) {
             viewBinding = ItemMovieBinding.bind(itemView)
+            viewBinding.ivMovie.clipToOutline = true
+
             Glide
                 .with(itemView)
-                .load("https://images2.alphacoders.com/906/thumb-1920-906919.jpg")
+                .load(PATH_LOAD_IMAGE + movies.poster_path)
                 .placeholder(R.drawable.ic_movie)
+                .error(R.drawable.ic_not_poster)
                 .into(viewBinding.ivMovie)
             viewBinding.twTitleMovie.text = movies.title
+            viewBinding.twDescription.text = movies.description
+            viewBinding.twReleaseDate.text = movies.release_date
         }
+    }
+
+    companion object{
+        private const val PATH_LOAD_IMAGE = "https://image.tmdb.org/t/p/w500"
     }
 }
