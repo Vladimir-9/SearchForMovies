@@ -24,6 +24,7 @@ class MoviesViewModel : ViewModel() {
 
     private fun getPopularMovies() {
         viewModelScope.launch {
+            _moviesStateFlow.value = MoviesLoadState.LoadState
             val awaitPopularMovies = async {
                 repository.searchPopularMovies(Dispatchers.IO)
             }
@@ -33,25 +34,32 @@ class MoviesViewModel : ViewModel() {
                     _moviesStateFlow.value = movies
                 }
                 is MoviesLoadState.Error -> {
+                    _moviesStateFlow.value = movies
                 }
             }
         }
     }
 
-    fun getSearchMovies(searchResponse: String, isPopular: Boolean) {
+    fun getSearchMovies(searchResponse: String) {
+        when {
+            searchResponse != "" -> searchMovies(searchResponse)
+            popularMovies != null -> _moviesStateFlow.value =
+                MoviesLoadState.Success(popularMovies!!)
+            else -> getPopularMovies()
+        }
+    }
+
+    private fun searchMovies(searchResponse: String) {
         viewModelScope.launch {
-            if (isPopular.not()) {
-                val awaitMovies = async { repository.searchMovies(Dispatchers.IO, searchResponse) }
-                when (val movies = awaitMovies.await()) {
-                    is MoviesLoadState.Success -> {
-                        _moviesStateFlow.value = movies
-                    }
-                    is MoviesLoadState.Error -> {
-                        _moviesStateFlow.value = movies
-                    }
+            _moviesStateFlow.value = MoviesLoadState.LoadState
+            val awaitMovies = async { repository.searchMovies(Dispatchers.IO, searchResponse) }
+            when (val movies = awaitMovies.await()) {
+                is MoviesLoadState.Success -> {
+                    _moviesStateFlow.value = movies
                 }
-            } else {
-                _moviesStateFlow.value = MoviesLoadState.Success(popularMovies ?: emptyList())
+                is MoviesLoadState.Error -> {
+                    _moviesStateFlow.value = movies
+                }
             }
         }
     }
