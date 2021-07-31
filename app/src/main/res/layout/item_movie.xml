@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_item_movie"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_image_movie">
@@ -25,9 +26,9 @@
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="5dp"
         android:ellipsize="end"
-        android:fontFamily="@font/gotham_pro_bold"
+        android:fontFamily="@font/appetite_italic"
         android:maxLines="2"
-        android:textColor="@color/primary_color_500"
+        android:textColor="#D6D7DC"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_movie"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,16 +52,16 @@
         android:id="@+id/tw_release"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/release"
         app:layout_constraintBottom_toBottomOf="@id/tw_release_date"
-        app:layout_constraintStart_toStartOf="@id/tw_description"
-        android:text="@string/release" />
+        app:layout_constraintStart_toStartOf="@id/tw_description" />
 
     <TextView
         android:id="@+id/tw_release_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/tw_release"
         tools:text="@string/app_name" />

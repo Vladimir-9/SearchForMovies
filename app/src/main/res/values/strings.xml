@@ -2,4 +2,7 @@
     <string name="app_name">SearchForMovies</string>
     <string name="search_by_movie_title">Поиск по названию фильма</string>
     <string name="release">Релиз:</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="error_load_movies">Не удалось загрузить данные</string>
+    <string name="enter_movie">Введите название фильма</string>
 </resources>

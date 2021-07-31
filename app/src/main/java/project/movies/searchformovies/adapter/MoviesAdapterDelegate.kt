@@ -54,7 +54,7 @@ class MoviesAdapterDelegate :
         }
     }
 
-    companion object{
+    companion object {
         private const val PATH_LOAD_IMAGE = "https://image.tmdb.org/t/p/w500"
     }
 }

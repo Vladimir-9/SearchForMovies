@@ -1,16 +1,24 @@
 package project.movies.searchformovies.movies
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
+import project.movies.searchformovies.R
+import project.movies.searchformovies.StubClassMovies
 import project.movies.searchformovies.adapter.MoviesAdapter
+import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
 import project.movies.searchformovies.databinding.DisplayingMoviesFragmentBinding
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
@@ -21,6 +29,7 @@ class MoviesFragment : Fragment() {
     private val viewModel: MoviesViewModel by viewModels()
     private var viewBinding: DisplayingMoviesFragmentBinding by autoCleared()
     private var adapterMovies: MoviesAdapter by autoCleared()
+    private var receiver: NetworkChangeReceiver? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,12 +49,28 @@ class MoviesFragment : Fragment() {
         collectingRemoteMovies()
         initRecyclerView()
         listenerSearchQuery()
-        searchQuery()
+        registerReceiver()
+        viewBinding.btSearch.setOnClickListener {
+            searchMovies()
+        }
+        viewBinding.btReloadData.setOnClickListener {
+            searchMovies()
+        }
     }
 
-    private fun searchQuery() {
-        viewBinding.ibSearch.setOnClickListener {
+    private fun registerReceiver() {
+        receiver = NetworkChangeReceiver()
+        requireContext().registerReceiver(
+            receiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
+    }
+
+    private fun searchMovies() {
+        if (viewBinding.etEnterSearch.text.isNotEmpty()) {
             viewModel.getSearchMovies(viewBinding.etEnterSearch.text.toString(), false)
+        } else {
+            toast(getString(R.string.enter_movie))
         }
     }
 
@@ -73,12 +98,31 @@ class MoviesFragment : Fragment() {
 
     private fun collectingRemoteMovies() {
         lifecycleScope.launchWhenStarted {
-            viewModel.moviesStateFlow.collect {
-                when (it) {
-                    is MoviesLoadState.Success -> adapterMovies.items = it.listMovies
-                    is MoviesLoadState.Error -> toast("Ошибка")
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.moviesStateFlow.collect {
+                    when (it) {
+                        is MoviesLoadState.Success -> {
+                            adapterMovies.items = it.listMovies
+                            visibleElementAfterError(false)
+                        }
+                        is MoviesLoadState.Error -> {
+                            visibleElementAfterError(true)
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private fun visibleElementAfterError(isVisible: Boolean) {
+        viewBinding.ivError.isVisible = isVisible
+        viewBinding.btReloadData.isVisible = isVisible
+        viewBinding.rvMovies.isVisible = isVisible.not()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        requireContext().unregisterReceiver(receiver)
+        receiver = null
     }
 }

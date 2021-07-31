@@ -9,4 +9,14 @@
         android:font="@font/gotham_pro_bold"
         android:fontStyle="normal"
         android:fontWeight="400" />
+
+    <font
+        android:font="@font/appetite_italic"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
+
+    <font
+        android:font="@font/sweet_mavka_script"
+        android:fontStyle="normal"
+        android:fontWeight="400" />
 </font-family>

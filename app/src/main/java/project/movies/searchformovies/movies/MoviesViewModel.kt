@@ -13,7 +13,8 @@ class MoviesViewModel : ViewModel() {
 
     private val repository = MoviesRepository()
     private var popularMovies: List<MoviesData>? = null
-    private val _moviesStateFlow = MutableStateFlow(MoviesLoadState.Success(listOf()))
+    private val _moviesStateFlow: MutableStateFlow<MoviesLoadState> =
+        MutableStateFlow(MoviesLoadState.Success(listOf()))
     val moviesStateFlow: StateFlow<MoviesLoadState>
         get() = _moviesStateFlow
 
@@ -46,6 +47,7 @@ class MoviesViewModel : ViewModel() {
                         _moviesStateFlow.value = movies
                     }
                     is MoviesLoadState.Error -> {
+                        _moviesStateFlow.value = movies
                     }
                 }
             } else {
