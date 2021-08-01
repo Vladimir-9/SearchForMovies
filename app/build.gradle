@@ -114,4 +114,7 @@ dependencies {
 
     //Logs
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    def pagingVersion = "3.0.1"
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
 }

@@ -18,8 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
-import project.movies.searchformovies.StubClassMovies
-import project.movies.searchformovies.adapter.MoviesAdapter
+import project.movies.searchformovies.adapter.MoviesAdapterDelegate
 import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
 import project.movies.searchformovies.databinding.DisplayingMoviesFragmentBinding
 import project.movies.searchformovies.utility.MoviesItemDecoration
@@ -30,9 +29,9 @@ class MoviesFragment : Fragment() {
 
     private val viewModel: MoviesViewModel by viewModels()
     private var viewBinding: DisplayingMoviesFragmentBinding by autoCleared()
-    private var adapterMovies: MoviesAdapter by autoCleared()
+    private var adapterMovies: MoviesAdapterDelegate by autoCleared()
     private var receiver: NetworkChangeReceiver? = null
-    private var responseMovies = ""
+    private var lastQuery = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,9 +70,9 @@ class MoviesFragment : Fragment() {
     }
 
     private fun searchMovies() {
-        val searchQuestion = viewBinding.etEnterSearch.text.toString()
-        if (searchQuestion.isNotEmpty() && responseMovies != searchQuestion) {
-            responseMovies = viewBinding.etEnterSearch.text.toString()
+        val searchRequest = viewBinding.etEnterSearch.text.toString()
+        if (searchRequest.isNotEmpty() && lastQuery != searchRequest) {
+            lastQuery = viewBinding.etEnterSearch.text.toString()
             viewModel.getSearchMovies(viewBinding.etEnterSearch.text.toString())
         } else {
             toast(getString(R.string.enter_movie))
@@ -81,7 +80,7 @@ class MoviesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapterMovies = MoviesAdapter()
+        adapterMovies = MoviesAdapterDelegate()
         with(viewBinding.rvMovies) {
             adapter = adapterMovies
             setHasFixedSize(true)
@@ -95,7 +94,8 @@ class MoviesFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s!!.isEmpty()) {
-                    viewModel.getSearchMovies("")
+                    collectingRemoteMovies()
+                    // viewModel.getSearchMovies("")
                 }
             }
 
@@ -106,25 +106,8 @@ class MoviesFragment : Fragment() {
     private fun collectingRemoteMovies() {
         lifecycleScope.launchWhenStarted {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.moviesStateFlow.collect {
-                    when (it) {
-                        is MoviesLoadState.Success -> {
-                            adapterMovies.items = it.listMovies
-                            visibleElementAfterError(false)
-                            isEnableButton(true)
-                            viewBinding.progressBar.isVisible = false
-                        }
-                        is MoviesLoadState.Error -> {
-                            visibleElementAfterError(true)
-                            isEnableButton(true)
-                            viewBinding.progressBar.isVisible = false
-                        }
-                        is MoviesLoadState.LoadState -> {
-                            viewBinding.progressBar.isVisible = true
-                            viewBinding.rvMovies.isVisible = false
-                            isEnableButton(false)
-                        }
-                    }
+                viewModel.moviesStateFlow.collect { pagingData ->
+                    adapterMovies.submitData(pagingData)
                 }
             }
         }

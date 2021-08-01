@@ -21,4 +21,9 @@ interface NetworkingApi {
         @Query("query") query: String,
         @Query("page") page: Int = 1
     ): RemoteMovies
+
+    companion object {
+        const val DEFAULT_PAGE_SIZE = 20
+        const val MAX_PAGE_SIZE = 20
+    }
 }
