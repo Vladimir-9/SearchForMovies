@@ -9,5 +9,23 @@
         android:id="@+id/displayingMovies"
         android:name="project.movies.searchformovies.movies.MoviesFragment"
         android:label="displaying_movies_fragment"
-        tools:layout="@layout/displaying_movies_fragment" />
+        tools:layout="@layout/displaying_movies_fragment" >
+        <action
+            android:id="@+id/action_displayingMovies_to_detailMoviesDialog"
+            app:destination="@id/detailMoviesDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/detailMoviesDialog"
+        android:name="project.movies.searchformovies.DetailInformationDialog"
+        android:label="DetailMoviesDialog"
+        tools:layout="@layout/dialog_detail_information">
+        <argument
+            android:name="uriPoster"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="description"
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
 </navigation>

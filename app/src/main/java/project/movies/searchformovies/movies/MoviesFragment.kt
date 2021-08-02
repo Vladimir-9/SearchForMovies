@@ -16,9 +16,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
-import project.movies.searchformovies.StubClassMovies
 import project.movies.searchformovies.adapter.MoviesAdapter
 import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
 import project.movies.searchformovies.databinding.DisplayingMoviesFragmentBinding
@@ -81,7 +81,12 @@ class MoviesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapterMovies = MoviesAdapter()
+        adapterMovies = MoviesAdapter { movies ->
+            val action = MoviesFragmentDirections.actionDisplayingMoviesToDetailMoviesDialog(
+                movies.backdrop_path, movies.description
+            )
+            findNavController().navigate(action)
+        }
         with(viewBinding.rvMovies) {
             adapter = adapterMovies
             setHasFixedSize(true)

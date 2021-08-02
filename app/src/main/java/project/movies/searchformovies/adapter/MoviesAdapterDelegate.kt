@@ -10,12 +10,12 @@ import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.ItemMovieBinding
 import project.movies.searchformovies.remote.MoviesData
 
-class MoviesAdapterDelegate :
+class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit) :
     AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(inflater.inflate(R.layout.item_movie, parent, false))
+        return ViewHolder(inflater.inflate(R.layout.item_movie, parent, false), itemClick)
     }
 
     override fun onBindViewHolder(
@@ -34,7 +34,8 @@ class MoviesAdapterDelegate :
         return true
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, private val itemClick: (movies: MoviesData) -> Unit) :
+        RecyclerView.ViewHolder(itemView) {
 
         private lateinit var viewBinding: ItemMovieBinding
 
@@ -51,10 +52,17 @@ class MoviesAdapterDelegate :
             viewBinding.twTitleMovie.text = movies.title
             viewBinding.twDescription.text = movies.description
             viewBinding.twReleaseDate.text = movies.release_date
+            sendMovie(movies)
+        }
+
+        private fun sendMovie(movies: MoviesData) {
+            itemView.setOnClickListener {
+                itemClick(movies)
+            }
         }
     }
 
     companion object {
-        private const val PATH_LOAD_IMAGE = "https://image.tmdb.org/t/p/w500"
+        const val PATH_LOAD_IMAGE = "https://image.tmdb.org/t/p/w500"
     }
 }

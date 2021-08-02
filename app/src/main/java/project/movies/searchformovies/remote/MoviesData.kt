@@ -15,6 +15,7 @@ data class MoviesData(
     @Json(name = "overview")
     val description: String,
     val poster_path: String?,
+    val backdrop_path: String?,
     val release_date: String?,
     val title: String
 )
