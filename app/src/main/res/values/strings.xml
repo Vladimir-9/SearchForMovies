@@ -5,4 +5,5 @@
     <string name="no_internet">Нет интернета</string>
     <string name="error_load_movies">Не удалось загрузить данные</string>
     <string name="enter_movie">Введите название фильма</string>
+    <string name="favourites">В избранное</string>
 </resources>

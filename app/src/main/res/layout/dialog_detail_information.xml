@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:minHeight="650dp"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    tools:background="@color/primary_color_500">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -28,9 +29,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"
-        tools:text="Наташе Романофф предстоит лицом к лицу встретиться со своим прошлым.
-        Чёрной Вдове придется вспомнить о том, что было в её жизни задолго до присоединения к команде Мстителей, и узнать об опасном заговоре,
-        в который оказываются втянуты её старые знакомые — Елена, Алексей (известный как Красный Страж) и Мелина." />
+        android:textSize="16sp"
+        tools:text="@string/app_name" />
+
+    <Button
+        android:id="@+id/bt_favourites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="@string/favourites"
+        android:textAllCaps="false" />
 
 </LinearLayout>

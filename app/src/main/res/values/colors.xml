@@ -15,4 +15,6 @@
     <color name="secondary_color_200">#01b4e4</color>
     <color name="secondary_color_700">#016E98</color>
     <color name="tertiary_color">#90cea1</color>
+
+    <color name="fab_favorites">#FAFF14</color>
 </resources>

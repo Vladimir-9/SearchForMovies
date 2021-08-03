@@ -32,4 +32,9 @@
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="android:backgroundTint">@color/primary_color_500</item>
     </style>
+
+    <style name="Theme.Fab.Favorites" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/secondary_color_700</item>
+        <item name="colorOnSecondary">@color/fab_favorites</item>
+    </style>
 </resources>

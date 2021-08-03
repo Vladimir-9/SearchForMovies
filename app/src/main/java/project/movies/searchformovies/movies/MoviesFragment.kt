@@ -12,24 +12,25 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.leinardi.android.speeddial.SpeedDialActionItem
 import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
 import project.movies.searchformovies.adapter.MoviesAdapter
 import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
-import project.movies.searchformovies.databinding.DisplayingMoviesFragmentBinding
+import project.movies.searchformovies.databinding.FragmentMoviesBinding
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 import project.movies.searchformovies.utility.toast
 
 class MoviesFragment : Fragment() {
 
-    private val viewModel: MoviesViewModel by viewModels()
-    private var viewBinding: DisplayingMoviesFragmentBinding by autoCleared()
+    private val viewModel: MoviesViewModel by activityViewModels()
+    private var viewBinding: FragmentMoviesBinding by autoCleared()
     private var adapterMovies: MoviesAdapter by autoCleared()
     private var receiver: NetworkChangeReceiver? = null
     private var responseMovies = ""
@@ -39,7 +40,7 @@ class MoviesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewBinding = DisplayingMoviesFragmentBinding.inflate(
+        viewBinding = FragmentMoviesBinding.inflate(
             LayoutInflater.from(requireContext()),
             container,
             false
@@ -53,6 +54,8 @@ class MoviesFragment : Fragment() {
         initRecyclerView()
         listenerSearchQuery()
         registerReceiver()
+        fabInit()
+        fabReactionToTheClick()
         viewBinding.btSearch.setOnClickListener {
             searchMovies()
             hideKeyboard()
@@ -83,7 +86,7 @@ class MoviesFragment : Fragment() {
     private fun initRecyclerView() {
         adapterMovies = MoviesAdapter { movies ->
             val action = MoviesFragmentDirections.actionDisplayingMoviesToDetailMoviesDialog(
-                movies.backdrop_path, movies.description
+                movies
             )
             findNavController().navigate(action)
         }
@@ -150,6 +153,23 @@ class MoviesFragment : Fragment() {
         viewBinding.ivError.isVisible = isVisible
         viewBinding.btReloadData.isVisible = isVisible
         viewBinding.rvMovies.isVisible = isVisible.not()
+    }
+
+    private fun fabInit() {
+        viewBinding.fab.addActionItem(
+            SpeedDialActionItem.Builder(R.id.fab_favorites, R.drawable.ic_favourite)
+                .setTheme(R.style.Theme_Fab_Favorites)
+                .create()
+        )
+    }
+
+    private fun fabReactionToTheClick() {
+        viewBinding.fab.setOnActionSelectedListener { actionItem ->
+            when (actionItem.id) {
+                R.id.fab_favorites -> findNavController().navigate(R.id.action_displayingMovies_to_lookAllFavoritesFragment)
+            }
+            false
+        }
     }
 
     override fun onDestroy() {
