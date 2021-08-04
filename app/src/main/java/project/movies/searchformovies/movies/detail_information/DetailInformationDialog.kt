@@ -1,10 +1,10 @@
-package project.movies.searchformovies.informations_movies
+package project.movies.searchformovies.movies.detail_information
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -12,13 +12,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import project.movies.searchformovies.R
 import project.movies.searchformovies.adapter.MoviesAdapterDelegate.Companion.PATH_LOAD_IMAGE
 import project.movies.searchformovies.databinding.DialogDetailInformationBinding
-import project.movies.searchformovies.movies.MoviesViewModel
+import project.movies.searchformovies.utility.autoCleared
 
 class DetailInformationDialog : BottomSheetDialogFragment() {
 
-    private lateinit var viewBinding: DialogDetailInformationBinding
+    private var viewBinding: DialogDetailInformationBinding by autoCleared()
     private val args: DetailInformationDialogArgs by navArgs()
-    private val viewModel: MoviesViewModel by activityViewModels()
+    private val viewModel: DetailInformationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

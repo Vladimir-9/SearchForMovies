@@ -1,4 +1,4 @@
-package project.movies.searchformovies.movies
+package project.movies.searchformovies.movies.movies_main
 
 import android.content.Context
 import android.content.IntentFilter
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,7 +29,7 @@ import project.movies.searchformovies.utility.toast
 
 class MoviesFragment : Fragment() {
 
-    private val viewModel: MoviesViewModel by activityViewModels()
+    private val viewModel: MoviesViewModel by viewModels()
     private var viewBinding: FragmentMoviesBinding by autoCleared()
     private var adapterMovies: MoviesAdapter by autoCleared()
     private var receiver: NetworkChangeReceiver? = null
@@ -174,7 +174,8 @@ class MoviesFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        requireContext().unregisterReceiver(receiver)
+        if (receiver != null)
+            requireContext().unregisterReceiver(receiver)
         receiver = null
     }
 }

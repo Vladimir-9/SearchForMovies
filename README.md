@@ -12,4 +12,6 @@ There is no API KEY in the project, if you want to get an API KEY, look here - [
 - [Moshi](https://github.com/square/moshi)
 - [Retrofit](https://github.com/square/retrofit)
 - [Coroutines](https://developer.android.com/topic/libraries/architecture/coroutines?hl=de)
+- [RoomDao](https://developer.android.google.cn/jetpack/androidx/releases/room?hl=en)
+- [LeakCanary](https://square.github.io/leakcanary/)
 - App Architecture - MVVM

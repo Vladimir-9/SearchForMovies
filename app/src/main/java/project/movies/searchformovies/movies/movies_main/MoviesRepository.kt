@@ -1,4 +1,4 @@
-package project.movies.searchformovies.movies
+package project.movies.searchformovies.movies.movies_main
 
 import kotlinx.coroutines.withContext
 import project.movies.searchformovies.db.Database
@@ -30,15 +30,15 @@ class MoviesRepository {
         }
     }
 
-    suspend fun saveFavoritesMovie(favoritesMovie: MoviesData){
+    suspend fun saveFavoritesMovie(favoritesMovie: MoviesData) {
         favoritesMovieDao.insertMovies(favoritesMovie)
     }
 
-    suspend fun getAllFavoritesMovie(): List<MoviesData>{
+    suspend fun getAllFavoritesMovie(): List<MoviesData> {
         return favoritesMovieDao.getAllMovies()
     }
 
-    suspend fun removeFavoritesMovie(favoriteId: Int){
+    suspend fun removeFavoritesMovie(favoriteId: Int) {
         favoritesMovieDao.removeFavoriteById(favoriteId)
     }
 }

@@ -1,4 +1,4 @@
-package project.movies.searchformovies.movies
+package project.movies.searchformovies.movies.movies_main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,21 +8,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import project.movies.searchformovies.remote.MoviesData
-import timber.log.Timber
 
 class MoviesViewModel : ViewModel() {
 
     private val repository = MoviesRepository()
-    private var popularMovies: List<MoviesData>? = null
+    private lateinit var popularMovies: List<MoviesData>
     private val _moviesStateFlow: MutableStateFlow<MoviesLoadState> =
         MutableStateFlow(MoviesLoadState.Success(listOf()))
     val moviesStateFlow: StateFlow<MoviesLoadState>
         get() = _moviesStateFlow
-
-    private val _favoritesMoviesStateFlow: MutableStateFlow<List<MoviesData>> =
-        MutableStateFlow(listOf())
-    val favoritesMoviesStateFlow: StateFlow<List<MoviesData>>
-        get() = _favoritesMoviesStateFlow
 
     init {
         getPopularMovies()
@@ -49,8 +43,8 @@ class MoviesViewModel : ViewModel() {
     fun getSearchMovies(searchResponse: String) {
         when {
             searchResponse != "" -> searchMovies(searchResponse)
-            popularMovies != null -> _moviesStateFlow.value =
-                MoviesLoadState.Success(popularMovies!!)
+            popularMovies.isEmpty().not() -> _moviesStateFlow.value =
+                MoviesLoadState.Success(popularMovies)
             else -> getPopularMovies()
         }
     }
@@ -68,42 +62,6 @@ class MoviesViewModel : ViewModel() {
                 }
             }
         }
-    }
-
-    fun saveFavoritesMovie(favoritesMovie: MoviesData) {
-        viewModelScope.launch {
-            try {
-                repository.saveFavoritesMovie(favoritesMovie)
-            } catch (t: Throwable) {
-                Timber.e(t)
-            }
-        }
-    }
-
-    fun getAllFavoritesMovie() {
-        viewModelScope.launch {
-            try {
-                _favoritesMoviesStateFlow.value = repository.getAllFavoritesMovie()
-            } catch (t: Throwable) {
-                Timber.e(t)
-            }
-        }
-    }
-
-    fun removeFavoritesMovie(favoriteId: Int) {
-        viewModelScope.launch {
-            try {
-                repository.removeFavoritesMovie(favoriteId)
-                getAllFavoritesMovie()
-            } catch (t: Throwable) {
-                Timber.e(t)
-            }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        popularMovies = null
     }
 }
 

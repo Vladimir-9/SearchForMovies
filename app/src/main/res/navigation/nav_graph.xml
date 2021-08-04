@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/displayingMovies"
-        android:name="project.movies.searchformovies.movies.MoviesFragment"
+        android:name="project.movies.searchformovies.movies.movies_main.MoviesFragment"
         android:label="displaying_movies_fragment"
         tools:layout="@layout/fragment_movies">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <dialog
         android:id="@+id/detailMoviesDialog"
-        android:name="project.movies.searchformovies.informations_movies.DetailInformationDialog"
+        android:name="project.movies.searchformovies.movies.detail_information.DetailInformationDialog"
         android:label="DetailMoviesDialog"
         tools:layout="@layout/dialog_detail_information">
         <argument
@@ -28,7 +28,7 @@
     </dialog>
     <fragment
         android:id="@+id/lookAllFavoritesFragment"
-        android:name="project.movies.searchformovies.informations_movies.LookAllFavoritesFragment"
+        android:name="project.movies.searchformovies.movies.look_all_favorites.LookAllFavoritesFragment"
         android:label="LookAllFavoritesFragment"
         tools:layout="@layout/fragment_look_all_favorites" />
 </navigation>
