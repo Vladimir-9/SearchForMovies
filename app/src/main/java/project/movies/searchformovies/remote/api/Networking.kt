@@ -1,4 +1,4 @@
-package project.movies.searchformovies.networking
+package project.movies.searchformovies.remote.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -1,4 +1,4 @@
-package project.movies.searchformovies.movies.movies_main
+package project.movies.searchformovies.presentation.movies_main
 
 import android.content.Context
 import android.content.IntentFilter
@@ -18,15 +18,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.leinardi.android.speeddial.SpeedDialActionItem
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
-import project.movies.searchformovies.adapter.MoviesAdapter
 import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
 import project.movies.searchformovies.databinding.FragmentMoviesBinding
+import project.movies.searchformovies.presentation.adapter.MoviesAdapter
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 import project.movies.searchformovies.utility.toast
 
+@AndroidEntryPoint
 class MoviesFragment : Fragment() {
 
     private val viewModel: MoviesViewModel by viewModels()

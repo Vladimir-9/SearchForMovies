@@ -1,4 +1,4 @@
-package project.movies.searchformovies.adapter
+package project.movies.searchformovies.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,22 +1,27 @@
-package project.movies.searchformovies.movies.movies_main
+package project.movies.searchformovies.presentation.movies_main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import project.movies.searchformovies.data.MoviesRepositoryImpl
 import project.movies.searchformovies.remote.MoviesData
+import javax.inject.Inject
 
-class MoviesViewModel : ViewModel() {
+@HiltViewModel
+class MoviesViewModel @Inject constructor(
+    private val repositoryImpl: MoviesRepositoryImpl
+) : ViewModel() {
 
-    private val repository = MoviesRepository()
     private lateinit var popularMovies: List<MoviesData>
     private val _moviesStateFlow: MutableStateFlow<MoviesLoadState> =
         MutableStateFlow(MoviesLoadState.Success(listOf()))
-    val moviesStateFlow: StateFlow<MoviesLoadState>
-        get() = _moviesStateFlow
+    val moviesStateFlow: StateFlow<MoviesLoadState> = _moviesStateFlow.asStateFlow()
 
     init {
         getPopularMovies()
@@ -26,7 +31,7 @@ class MoviesViewModel : ViewModel() {
         viewModelScope.launch {
             _moviesStateFlow.value = MoviesLoadState.LoadState
             val awaitPopularMovies = async {
-                repository.searchPopularMovies(Dispatchers.IO)
+                repositoryImpl.searchPopularMovies(Dispatchers.IO)
             }
             when (val movies = awaitPopularMovies.await()) {
                 is MoviesLoadState.Success -> {
@@ -52,7 +57,7 @@ class MoviesViewModel : ViewModel() {
     private fun searchMovies(searchResponse: String) {
         viewModelScope.launch {
             _moviesStateFlow.value = MoviesLoadState.LoadState
-            val awaitMovies = async { repository.searchMovies(Dispatchers.IO, searchResponse) }
+            val awaitMovies = async { repositoryImpl.searchMovies(Dispatchers.IO, searchResponse) }
             when (val movies = awaitMovies.await()) {
                 is MoviesLoadState.Success -> {
                     _moviesStateFlow.value = movies

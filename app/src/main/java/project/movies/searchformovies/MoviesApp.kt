@@ -1,14 +1,14 @@
 package project.movies.searchformovies
 
 import android.app.Application
-import project.movies.searchformovies.db.Database
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+@HiltAndroidApp
 class MoviesApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        Database.init(this)
     }
 }

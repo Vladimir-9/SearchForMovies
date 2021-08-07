@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
-import project.movies.searchformovies.db.models.MoviesContract
+import project.movies.searchformovies.data.db.models.MoviesContract
 
 @JsonClass(generateAdapter = true)
 data class RemoteMovies(

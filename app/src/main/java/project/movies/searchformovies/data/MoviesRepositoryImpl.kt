@@ -1,16 +1,18 @@
-package project.movies.searchformovies.movies.movies_main
+package project.movies.searchformovies.data
 
 import kotlinx.coroutines.withContext
-import project.movies.searchformovies.db.Database
-import project.movies.searchformovies.networking.Networking
+import project.movies.searchformovies.data.db.MoviesDao
+import project.movies.searchformovies.presentation.movies_main.MoviesLoadState
 import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.remote.api.Networking
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class MoviesRepository {
+class MoviesRepositoryImpl @Inject constructor(
+    private val favoritesMovieDao: MoviesDao
+) : MoviesRepository {
 
-    private val favoritesMovieDao = Database.instance.moviesDao()
-
-    suspend fun searchPopularMovies(context: CoroutineContext): MoviesLoadState {
+    override suspend fun searchPopularMovies(context: CoroutineContext): MoviesLoadState {
         return withContext(context) {
             try {
                 MoviesLoadState.Success(Networking.networkingApi.popularMovies().results)
@@ -20,7 +22,10 @@ class MoviesRepository {
         }
     }
 
-    suspend fun searchMovies(context: CoroutineContext, searchResponse: String): MoviesLoadState {
+    override suspend fun searchMovies(
+        context: CoroutineContext,
+        searchResponse: String
+    ): MoviesLoadState {
         return withContext(context) {
             try {
                 MoviesLoadState.Success(Networking.networkingApi.searchMovies(query = searchResponse).results)
@@ -30,15 +35,15 @@ class MoviesRepository {
         }
     }
 
-    suspend fun saveFavoritesMovie(favoritesMovie: MoviesData) {
+    override suspend fun saveFavoritesMovie(favoritesMovie: MoviesData) {
         favoritesMovieDao.insertMovies(favoritesMovie)
     }
 
-    suspend fun getAllFavoritesMovie(): List<MoviesData> {
+    override suspend fun getAllFavoritesMovie(): List<MoviesData> {
         return favoritesMovieDao.getAllMovies()
     }
 
-    suspend fun removeFavoritesMovie(favoriteId: Int) {
+    override suspend fun removeFavoritesMovie(favoriteId: Int) {
         favoritesMovieDao.removeFavoriteById(favoriteId)
     }
 }

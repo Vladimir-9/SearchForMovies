@@ -1,4 +1,4 @@
-package project.movies.searchformovies.movies.look_all_favorites
+package project.movies.searchformovies.presentation.look_all_favorites
 
 import android.os.Bundle
 import android.text.SpannableString
@@ -16,14 +16,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
-import project.movies.searchformovies.adapter.MoviesAdapter
 import project.movies.searchformovies.databinding.FragmentLookAllFavoritesBinding
+import project.movies.searchformovies.presentation.adapter.MoviesAdapter
 import project.movies.searchformovies.remote.MoviesData
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 
+@AndroidEntryPoint
 class LookAllFavoritesFragment : Fragment() {
 
     private var viewBinding: FragmentLookAllFavoritesBinding by autoCleared()

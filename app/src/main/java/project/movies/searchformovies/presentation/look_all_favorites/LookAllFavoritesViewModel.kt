@@ -1,28 +1,32 @@
-package project.movies.searchformovies.movies.look_all_favorites
+package project.movies.searchformovies.presentation.look_all_favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.movies.movies_main.MoviesRepository
+import project.movies.searchformovies.data.MoviesRepositoryImpl
 import project.movies.searchformovies.remote.MoviesData
 import timber.log.Timber
+import javax.inject.Inject
 
-class LookAllFavoritesViewModel : ViewModel() {
-
-    private val repository = MoviesRepository()
+@HiltViewModel
+class LookAllFavoritesViewModel @Inject constructor(
+    private val repositoryImpl: MoviesRepositoryImpl
+) : ViewModel() {
 
     private val _favoritesMoviesStateFlow: MutableStateFlow<List<MoviesData>> =
         MutableStateFlow(listOf())
-    val favoritesMoviesStateFlow: StateFlow<List<MoviesData>>
-        get() = _favoritesMoviesStateFlow
+    val favoritesMoviesStateFlow: StateFlow<List<MoviesData>> =
+        _favoritesMoviesStateFlow.asStateFlow()
 
 
     fun getAllFavoritesMovie() {
         viewModelScope.launch {
             try {
-                _favoritesMoviesStateFlow.value = repository.getAllFavoritesMovie()
+                _favoritesMoviesStateFlow.value = repositoryImpl.getAllFavoritesMovie()
             } catch (t: Throwable) {
                 Timber.e(t)
             }
@@ -32,7 +36,7 @@ class LookAllFavoritesViewModel : ViewModel() {
     fun removeFavoritesMovie(favoriteId: Int) {
         viewModelScope.launch {
             try {
-                repository.removeFavoritesMovie(favoriteId)
+                repositoryImpl.removeFavoritesMovie(favoriteId)
                 getAllFavoritesMovie()
             } catch (t: Throwable) {
                 Timber.e(t)

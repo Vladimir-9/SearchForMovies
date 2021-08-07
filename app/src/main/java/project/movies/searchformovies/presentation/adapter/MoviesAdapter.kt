@@ -1,4 +1,4 @@
-package project.movies.searchformovies.adapter
+package project.movies.searchformovies.presentation.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter

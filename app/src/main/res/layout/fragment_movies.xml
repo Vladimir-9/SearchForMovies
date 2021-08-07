@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/primary_color_500"
     android:orientation="vertical"
-    tools:context=".movies.movies_main.MoviesFragment">
+    tools:context=".presentation.movies_main.MoviesFragment">
 
     <EditText
         android:id="@+id/et_enter_search"

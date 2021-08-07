@@ -1,10 +1,10 @@
-package project.movies.searchformovies.db
+package project.movies.searchformovies.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import project.movies.searchformovies.db.models.MoviesContract
+import project.movies.searchformovies.data.db.models.MoviesContract
 import project.movies.searchformovies.remote.MoviesData
 
 @Dao

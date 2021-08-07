@@ -1,4 +1,4 @@
-package project.movies.searchformovies.networking
+package project.movies.searchformovies.remote.api
 
 import project.movies.searchformovies.remote.RemoteMovies
 import retrofit2.http.GET

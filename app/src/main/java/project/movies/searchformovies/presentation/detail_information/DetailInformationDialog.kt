@@ -1,4 +1,4 @@
-package project.movies.searchformovies.movies.detail_information
+package project.movies.searchformovies.presentation.detail_information
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,11 +9,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
-import project.movies.searchformovies.adapter.MoviesAdapterDelegate.Companion.PATH_LOAD_IMAGE
 import project.movies.searchformovies.databinding.DialogDetailInformationBinding
+import project.movies.searchformovies.presentation.adapter.MoviesAdapterDelegate.Companion.PATH_LOAD_IMAGE
 import project.movies.searchformovies.utility.autoCleared
 
+@AndroidEntryPoint
 class DetailInformationDialog : BottomSheetDialogFragment() {
 
     private var viewBinding: DialogDetailInformationBinding by autoCleared()

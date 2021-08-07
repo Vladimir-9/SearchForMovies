@@ -14,4 +14,5 @@ There is no API KEY in the project, if you want to get an API KEY, look here - [
 - [Coroutines](https://developer.android.com/topic/libraries/architecture/coroutines?hl=de)
 - [RoomDao](https://developer.android.google.cn/jetpack/androidx/releases/room?hl=en)
 - [LeakCanary](https://square.github.io/leakcanary/)
+- [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - App Architecture - MVVM
