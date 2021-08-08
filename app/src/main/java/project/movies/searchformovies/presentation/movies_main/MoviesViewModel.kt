@@ -3,20 +3,17 @@ package project.movies.searchformovies.presentation.movies_main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.data.MoviesRepositoryImpl
+import project.movies.searchformovies.data.MoviesRepository
 import project.movies.searchformovies.remote.MoviesData
 import javax.inject.Inject
 
 @HiltViewModel
-class MoviesViewModel @Inject constructor(
-    private val repositoryImpl: MoviesRepositoryImpl
-) : ViewModel() {
+class MoviesViewModel @Inject constructor(private val repository: MoviesRepository) : ViewModel() {
 
     private lateinit var popularMovies: List<MoviesData>
     private val _moviesStateFlow: MutableStateFlow<MoviesLoadState> =
@@ -31,7 +28,7 @@ class MoviesViewModel @Inject constructor(
         viewModelScope.launch {
             _moviesStateFlow.value = MoviesLoadState.LoadState
             val awaitPopularMovies = async {
-                repositoryImpl.searchPopularMovies(Dispatchers.IO)
+                repository.searchPopularMovies()
             }
             when (val movies = awaitPopularMovies.await()) {
                 is MoviesLoadState.Success -> {
@@ -57,7 +54,7 @@ class MoviesViewModel @Inject constructor(
     private fun searchMovies(searchResponse: String) {
         viewModelScope.launch {
             _moviesStateFlow.value = MoviesLoadState.LoadState
-            val awaitMovies = async { repositoryImpl.searchMovies(Dispatchers.IO, searchResponse) }
+            val awaitMovies = async { repository.searchMovies(searchResponse) }
             when (val movies = awaitMovies.await()) {
                 is MoviesLoadState.Success -> {
                     _moviesStateFlow.value = movies

@@ -1,6 +1,5 @@
 package project.movies.searchformovies.data
 
-import kotlinx.coroutines.withContext
 import project.movies.searchformovies.data.db.MoviesDao
 import project.movies.searchformovies.presentation.movies_main.MoviesLoadState
 import project.movies.searchformovies.remote.MoviesData
@@ -12,26 +11,19 @@ class MoviesRepositoryImpl @Inject constructor(
     private val favoritesMovieDao: MoviesDao
 ) : MoviesRepository {
 
-    override suspend fun searchPopularMovies(context: CoroutineContext): MoviesLoadState {
-        return withContext(context) {
-            try {
-                MoviesLoadState.Success(Networking.networkingApi.popularMovies().results)
-            } catch (e: Exception) {
-                MoviesLoadState.Error(e.message)
-            }
+    override suspend fun searchPopularMovies(): MoviesLoadState {
+        return try {
+            MoviesLoadState.Success(Networking.networkingApi.popularMovies().results)
+        } catch (e: Exception) {
+            MoviesLoadState.Error(e.message)
         }
     }
 
-    override suspend fun searchMovies(
-        context: CoroutineContext,
-        searchResponse: String
-    ): MoviesLoadState {
-        return withContext(context) {
-            try {
-                MoviesLoadState.Success(Networking.networkingApi.searchMovies(query = searchResponse).results)
-            } catch (e: Exception) {
-                MoviesLoadState.Error(e.message)
-            }
+    override suspend fun searchMovies(searchResponse: String): MoviesLoadState {
+        return try {
+            MoviesLoadState.Success(Networking.networkingApi.searchMovies(query = searchResponse).results)
+        } catch (e: Exception) {
+            MoviesLoadState.Error(e.message)
         }
     }
 

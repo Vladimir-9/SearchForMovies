@@ -4,20 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.data.MoviesRepositoryImpl
+import project.movies.searchformovies.data.MoviesRepository
 import project.movies.searchformovies.remote.MoviesData
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailInformationViewModel @Inject constructor(
-    private val repositoryImpl: MoviesRepositoryImpl
+    private val repository: MoviesRepository
 ) : ViewModel() {
 
     fun saveFavoritesMovie(favoritesMovie: MoviesData) {
         viewModelScope.launch {
             try {
-                repositoryImpl.saveFavoritesMovie(favoritesMovie)
+                repository.saveFavoritesMovie(favoritesMovie)
             } catch (t: Throwable) {
                 Timber.e(t)
             }
