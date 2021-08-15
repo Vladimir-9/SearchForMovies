@@ -1,12 +1,11 @@
 package project.movies.searchformovies.presentation.movies_main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import project.movies.searchformovies.data.MoviesRepository
 import project.movies.searchformovies.remote.MoviesData
@@ -15,10 +14,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviesViewModel @Inject constructor(private val repository: MoviesRepository) : ViewModel() {
 
-    private lateinit var popularMovies: List<MoviesData>
-    private val _moviesStateFlow: MutableStateFlow<MoviesLoadState> =
-        MutableStateFlow(MoviesLoadState.Success(listOf()))
-    val moviesStateFlow: StateFlow<MoviesLoadState> = _moviesStateFlow.asStateFlow()
+    private var popularMovies = listOf<MoviesData>()
+    private val _moviesStateFlow = MutableLiveData<MoviesLoadState>()
+    val moviesStateFlow: LiveData<MoviesLoadState>
+        get() = _moviesStateFlow
 
     init {
         getPopularMovies()
@@ -27,17 +26,22 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
     private fun getPopularMovies() {
         viewModelScope.launch {
             _moviesStateFlow.value = MoviesLoadState.LoadState
-            val awaitPopularMovies = async {
+            val awaitPopularMoviesState = async {
                 repository.searchPopularMovies()
             }
-            when (val movies = awaitPopularMovies.await()) {
-                is MoviesLoadState.Success -> {
-                    popularMovies = movies.listMovies
-                    _moviesStateFlow.value = movies
-                }
-                is MoviesLoadState.Error -> {
-                    _moviesStateFlow.value = movies
-                }
+            val moviesState = awaitPopularMoviesState.await()
+            getStatePopularMovies(moviesState)
+        }
+    }
+
+    private fun getStatePopularMovies(moviesState: MoviesLoadState) {
+        when (moviesState) {
+            is MoviesLoadState.Success -> {
+                popularMovies = moviesState.listMovies
+                _moviesStateFlow.value = MoviesLoadState.Success(moviesState.listMovies)
+            }
+            is MoviesLoadState.Error -> {
+                _moviesStateFlow.value = MoviesLoadState.Error("getStatePopularMovies")
             }
         }
     }
@@ -45,7 +49,7 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
     fun getSearchMovies(searchResponse: String) {
         when {
             searchResponse != "" -> searchMovies(searchResponse)
-            popularMovies.isEmpty().not() -> _moviesStateFlow.value =
+            popularMovies.isNotEmpty() -> _moviesStateFlow.value =
                 MoviesLoadState.Success(popularMovies)
             else -> getPopularMovies()
         }
@@ -54,15 +58,18 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
     private fun searchMovies(searchResponse: String) {
         viewModelScope.launch {
             _moviesStateFlow.value = MoviesLoadState.LoadState
-            val awaitMovies = async { repository.searchMovies(searchResponse) }
-            when (val movies = awaitMovies.await()) {
-                is MoviesLoadState.Success -> {
-                    _moviesStateFlow.value = movies
-                }
-                is MoviesLoadState.Error -> {
-                    _moviesStateFlow.value = movies
-                }
-            }
+            val awaitMoviesState = async { repository.searchMovies(searchResponse) }
+            val moviesLoadState = awaitMoviesState.await()
+            getStateSearchMovies(moviesLoadState)
+        }
+    }
+
+    private fun getStateSearchMovies(moviesState: MoviesLoadState) {
+        when (moviesState) {
+            is MoviesLoadState.Success ->
+                _moviesStateFlow.value = MoviesLoadState.Success(moviesState.listMovies)
+            is MoviesLoadState.Error ->
+                _moviesStateFlow.value = MoviesLoadState.Error("getStateSearchMovies")
         }
     }
 }

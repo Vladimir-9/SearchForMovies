@@ -114,27 +114,23 @@ class MoviesFragment : Fragment() {
     }
 
     private fun collectingRemoteMovies() {
-        lifecycleScope.launchWhenStarted {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.moviesStateFlow.collect {
-                    when (it) {
-                        is MoviesLoadState.Success -> {
-                            adapterMovies.items = it.listMovies
-                            visibleElementAfterError(false)
-                            isEnableButton(true)
-                            viewBinding.progressBar.isVisible = false
-                        }
-                        is MoviesLoadState.Error -> {
-                            visibleElementAfterError(true)
-                            isEnableButton(true)
-                            viewBinding.progressBar.isVisible = false
-                        }
-                        is MoviesLoadState.LoadState -> {
-                            viewBinding.progressBar.isVisible = true
-                            viewBinding.rvMovies.isVisible = false
-                            isEnableButton(false)
-                        }
-                    }
+        viewModel.moviesStateFlow.observe(viewLifecycleOwner) {
+            when (it) {
+                is MoviesLoadState.Success -> {
+                    adapterMovies.items = it.listMovies
+                    visibleElementAfterError(false)
+                    isEnableButton(true)
+                    viewBinding.progressBar.isVisible = false
+                }
+                is MoviesLoadState.Error -> {
+                    visibleElementAfterError(true)
+                    isEnableButton(true)
+                    viewBinding.progressBar.isVisible = false
+                }
+                is MoviesLoadState.LoadState -> {
+                    viewBinding.progressBar.isVisible = true
+                    viewBinding.rvMovies.isVisible = false
+                    isEnableButton(false)
                 }
             }
         }
