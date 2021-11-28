@@ -11,19 +11,19 @@ class MoviesRepositoryImpl @Inject constructor(
     private val networkingApi: NetworkingApi
 ) : MoviesRepository {
 
-    override suspend fun searchPopularMovies(): MoviesLoadState {
+    override suspend fun searchPopularMovies(): List<MoviesData> {
         return try {
-            MoviesLoadState.Success(networkingApi.popularMovies().results)
+            networkingApi.popularMovies().results
         } catch (e: Exception) {
-            MoviesLoadState.Error("error")
+            emptyList()
         }
     }
 
-    override suspend fun searchMovies(searchResponse: String): MoviesLoadState {
+    override suspend fun searchMovies(searchResponse: String): List<MoviesData> {
         return try {
-            MoviesLoadState.Success(networkingApi.searchMovies(query = searchResponse).results)
+            networkingApi.searchMovies(query = searchResponse).results
         } catch (e: Exception) {
-            MoviesLoadState.Error("error")
+            emptyList()
         }
     }
 

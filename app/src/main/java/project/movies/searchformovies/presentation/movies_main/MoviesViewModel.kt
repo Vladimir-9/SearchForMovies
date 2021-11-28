@@ -15,9 +15,9 @@ import javax.inject.Inject
 class MoviesViewModel @Inject constructor(private val repository: MoviesRepository) : ViewModel() {
 
     private var popularMovies = listOf<MoviesData>()
-    private val _moviesStateFlow = MutableLiveData<MoviesLoadState>()
-    val moviesStateFlow: LiveData<MoviesLoadState>
-        get() = _moviesStateFlow
+    private val _moviesLiveDate = MutableLiveData<MoviesLoadState>()
+    val moviesLiveDate: LiveData<MoviesLoadState>
+        get() = _moviesLiveDate
 
     init {
         getPopularMovies()
@@ -25,23 +25,23 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
 
     private fun getPopularMovies() {
         viewModelScope.launch {
-            _moviesStateFlow.value = MoviesLoadState.LoadState
+            _moviesLiveDate.value = MoviesLoadState.LoadState
             val awaitPopularMoviesState = async {
                 repository.searchPopularMovies()
             }
-            val moviesState = awaitPopularMoviesState.await()
-            getStatePopularMovies(moviesState)
+            val moviesList = awaitPopularMoviesState.await()
+            getStatePopularMovies(moviesList)
         }
     }
 
-    private fun getStatePopularMovies(moviesState: MoviesLoadState) {
-        when (moviesState) {
-            is MoviesLoadState.Success -> {
-                popularMovies = moviesState.listMovies
-                _moviesStateFlow.value = MoviesLoadState.Success(moviesState.listMovies)
+    private fun getStatePopularMovies(moviesList: List<MoviesData>) {
+        when {
+             moviesList.isNotEmpty() -> {
+                popularMovies = moviesList
+                _moviesLiveDate.value = MoviesLoadState.Success(moviesList)
             }
-            is MoviesLoadState.Error -> {
-                _moviesStateFlow.value = MoviesLoadState.Error("getStatePopularMovies")
+             else -> {
+                _moviesLiveDate.value = MoviesLoadState.Error("getStatePopularMovies")
             }
         }
     }
@@ -49,7 +49,7 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
     fun getSearchMovies(searchResponse: String) {
         when {
             searchResponse != "" -> searchMovies(searchResponse)
-            popularMovies.isNotEmpty() -> _moviesStateFlow.value =
+            popularMovies.isNotEmpty() -> _moviesLiveDate.value =
                 MoviesLoadState.Success(popularMovies)
             else -> getPopularMovies()
         }
@@ -57,19 +57,19 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
 
     private fun searchMovies(searchResponse: String) {
         viewModelScope.launch {
-            _moviesStateFlow.value = MoviesLoadState.LoadState
+            _moviesLiveDate.value = MoviesLoadState.LoadState
             val awaitMoviesState = async { repository.searchMovies(searchResponse) }
-            val moviesLoadState = awaitMoviesState.await()
-            getStateSearchMovies(moviesLoadState)
+            val moviesList = awaitMoviesState.await()
+            getStateSearchMovies(moviesList)
         }
     }
 
-    private fun getStateSearchMovies(moviesState: MoviesLoadState) {
-        when (moviesState) {
-            is MoviesLoadState.Success ->
-                _moviesStateFlow.value = MoviesLoadState.Success(moviesState.listMovies)
-            is MoviesLoadState.Error ->
-                _moviesStateFlow.value = MoviesLoadState.Error("getStateSearchMovies")
+    private fun getStateSearchMovies(moviesList: List<MoviesData>) {
+        when {
+            moviesList.isNotEmpty() ->
+                _moviesLiveDate.value = MoviesLoadState.Success(moviesList)
+            else ->
+                _moviesLiveDate.value = MoviesLoadState.Error("getStateSearchMovies")
         }
     }
 }

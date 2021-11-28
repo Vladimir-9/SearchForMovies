@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -26,27 +24,15 @@ import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 
 @AndroidEntryPoint
-class LookAllFavoritesFragment : Fragment() {
+class LookAllFavoritesFragment : Fragment(R.layout.fragment_look_all_favorites) {
 
     private var viewBinding: FragmentLookAllFavoritesBinding by autoCleared()
     private var adapterMovies: MoviesAdapter by autoCleared()
     private val viewModel: LookAllFavoritesViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        viewBinding = FragmentLookAllFavoritesBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
-            false
-        )
-        return viewBinding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentLookAllFavoritesBinding.bind(view)
         viewModel.getAllFavoritesMovie()
         initRecyclerView()
         fillingInTheAdapter()
@@ -56,8 +42,6 @@ class LookAllFavoritesFragment : Fragment() {
         adapterMovies = MoviesAdapter { favoritesMovie ->
             createDialog(favoritesMovie)
         }
-
-
         with(viewBinding.rwFavoritesMovies) {
             adapter = adapterMovies
             setHasFixedSize(true)

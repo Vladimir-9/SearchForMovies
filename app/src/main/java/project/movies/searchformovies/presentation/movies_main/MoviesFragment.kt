@@ -6,20 +6,14 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
 import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
 import project.movies.searchformovies.databinding.FragmentMoviesBinding
@@ -29,7 +23,7 @@ import project.movies.searchformovies.utility.autoCleared
 import project.movies.searchformovies.utility.toast
 
 @AndroidEntryPoint
-class MoviesFragment : Fragment() {
+class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
     private val viewModel: MoviesViewModel by viewModels()
     private var viewBinding: FragmentMoviesBinding by autoCleared()
@@ -37,21 +31,9 @@ class MoviesFragment : Fragment() {
     private var receiver: NetworkChangeReceiver? = null
     private var responseMovies = ""
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        viewBinding = FragmentMoviesBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
-            false
-        )
-        return viewBinding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentMoviesBinding.bind(view)
         collectingRemoteMovies()
         initRecyclerView()
         listenerSearchQuery()
@@ -114,7 +96,7 @@ class MoviesFragment : Fragment() {
     }
 
     private fun collectingRemoteMovies() {
-        viewModel.moviesStateFlow.observe(viewLifecycleOwner) {
+        viewModel.moviesLiveDate.observe(viewLifecycleOwner) {
             when (it) {
                 is MoviesLoadState.Success -> {
                     adapterMovies.items = it.listMovies
