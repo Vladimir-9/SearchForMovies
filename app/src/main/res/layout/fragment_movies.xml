@@ -33,13 +33,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/et_enter_search" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <project.movies.searchformovies.viewpager.ViewPagerRecycleView
         android:id="@+id/rv_movies"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

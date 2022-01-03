@@ -4,11 +4,11 @@ import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import project.movies.searchformovies.remote.MoviesData
 
-class MoviesAdapter(itemClick: (movies: MoviesData) -> Unit) :
+class MoviesAdapter(width: Int = 0, height: Int = 0, itemClick: (movies: MoviesData) -> Unit) :
     AsyncListDifferDelegationAdapter<MoviesData>(MoviesDiffUtil()) {
 
     init {
-        delegatesManager.addDelegate(MoviesAdapterDelegate(itemClick))
+        delegatesManager.addDelegate(MoviesAdapterDelegate(width, height, itemClick))
     }
 
     class MoviesDiffUtil : DiffUtil.ItemCallback<MoviesData>() {
@@ -19,6 +19,5 @@ class MoviesAdapter(itemClick: (movies: MoviesData) -> Unit) :
         override fun areContentsTheSame(oldItem: MoviesData, newItem: MoviesData): Boolean {
             return oldItem.id == newItem.id
         }
-
     }
 }

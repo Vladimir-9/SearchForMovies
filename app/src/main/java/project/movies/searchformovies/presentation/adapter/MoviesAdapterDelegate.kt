@@ -10,12 +10,18 @@ import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.ItemMovieBinding
 import project.movies.searchformovies.remote.MoviesData
 
-class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit) :
-    AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
+class MoviesAdapterDelegate(
+    private var width: Int,
+    private val height: Int,
+    private val itemClick: (movies: MoviesData) -> Unit
+) : AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(inflater.inflate(R.layout.item_movie, parent, false), itemClick)
+        val view = LayoutInflater
+            .from(parent.context)
+            .inflate(R.layout.item_movie, parent, false)
+        view.layoutParams = RecyclerView.LayoutParams(width, height)
+        return ViewHolder(view, itemClick)
     }
 
     override fun onBindViewHolder(
@@ -45,7 +51,7 @@ class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit)
 
             Glide
                 .with(itemView)
-                .load(PATH_LOAD_IMAGE + movies.poster_path)
+                .load(PATH_LOAD_IMAGE + movies.backdrop_path)
                 .placeholder(R.drawable.ic_movie)
                 .error(R.drawable.ic_not_poster)
                 .into(viewBinding.ivMovie)

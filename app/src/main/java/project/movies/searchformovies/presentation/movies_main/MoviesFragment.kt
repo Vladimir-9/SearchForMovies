@@ -15,12 +15,15 @@ import androidx.navigation.fragment.findNavController
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
+import project.movies.searchformovies.viewpager.CurveTransformer
+import project.movies.searchformovies.viewpager.ViewPagerLayoutManager
 import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
 import project.movies.searchformovies.databinding.FragmentMoviesBinding
 import project.movies.searchformovies.presentation.adapter.MoviesAdapter
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 import project.movies.searchformovies.utility.toast
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MoviesFragment : Fragment(R.layout.fragment_movies) {
@@ -68,13 +71,24 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     }
 
     private fun initRecyclerView() {
-        adapterMovies = MoviesAdapter { movies ->
+        val displayMetrics = requireContext().resources.displayMetrics
+        val width: Int = (displayMetrics.widthPixels * 0.8f).roundToInt()
+        val height: Int = (displayMetrics.heightPixels * 0.8f).roundToInt()
+
+        adapterMovies = MoviesAdapter(width, height) { movies ->
             val action = MoviesFragmentDirections.actionDisplayingMoviesToDetailMoviesDialog(
                 movies
             )
             findNavController().navigate(action)
         }
         with(viewBinding.rvMovies) {
+            setFlingAble(false)
+            val layoutManagerGallery =
+                ViewPagerLayoutManager(ViewPagerLayoutManager.HORIZONTAL)
+
+            layoutManagerGallery.attach(this)
+            layoutManagerGallery.setItemTransformer(CurveTransformer())
+
             adapter = adapterMovies
             setHasFixedSize(true)
             addItemDecoration(MoviesItemDecoration())

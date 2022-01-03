@@ -3,12 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/drawable/shape_image_movie.xml" value="0.23333333333333334" />
-        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/drawable/shape_search_movies.xml" value="0.34074074074074073" />
-        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/activity_main.xml" value="0.21944444444444444" />
-        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/dialog_detail_information.xml" value="0.29814814814814816" />
-        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/fragment_look_all_favorites.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/fragment_movies.xml" value="0.1" />
+        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/displaying_movies_fragment.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/fragment_look_all_favorites.xml" value="0.33238636363636365" />
+        <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/fragment_movies.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Vovchik/Desktop/Android Learning/PetProject/SearchForMovies/app/src/main/res/layout/item_movie.xml" value="0.36666666666666664" />
       </map>
     </option>

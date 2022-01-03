@@ -18,7 +18,7 @@ class LookAllFavoritesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _favoritesMoviesStateFlow: MutableStateFlow<List<MoviesData>> =
-        MutableStateFlow(listOf())
+        MutableStateFlow(listOf(MoviesData(1,"","",null,null,"")))
     val favoritesMoviesStateFlow: StateFlow<List<MoviesData>> =
         _favoritesMoviesStateFlow.asStateFlow()
 

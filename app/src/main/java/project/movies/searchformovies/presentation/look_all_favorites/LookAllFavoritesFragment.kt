@@ -17,11 +17,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
+import project.movies.searchformovies.viewpager.CurveTransformer
+import project.movies.searchformovies.viewpager.ViewPagerLayoutManager
 import project.movies.searchformovies.databinding.FragmentLookAllFavoritesBinding
 import project.movies.searchformovies.presentation.adapter.MoviesAdapter
 import project.movies.searchformovies.remote.MoviesData
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class LookAllFavoritesFragment : Fragment(R.layout.fragment_look_all_favorites) {
@@ -39,10 +42,21 @@ class LookAllFavoritesFragment : Fragment(R.layout.fragment_look_all_favorites) 
     }
 
     private fun initRecyclerView() {
-        adapterMovies = MoviesAdapter { favoritesMovie ->
+        val displayMetrics = requireContext().resources.displayMetrics
+        val width: Int = (displayMetrics.widthPixels * 0.8f).roundToInt()
+        val height: Int = (displayMetrics.heightPixels * 0.8f).roundToInt()
+
+        adapterMovies = MoviesAdapter(width, height) { favoritesMovie ->
             createDialog(favoritesMovie)
         }
         with(viewBinding.rwFavoritesMovies) {
+            setFlingAble(false)
+            val layoutManagerGallery =
+                ViewPagerLayoutManager(ViewPagerLayoutManager.HORIZONTAL)
+
+            layoutManagerGallery.attach(this)
+            layoutManagerGallery.setItemTransformer(CurveTransformer())
+
             adapter = adapterMovies
             setHasFixedSize(true)
             addItemDecoration(MoviesItemDecoration())

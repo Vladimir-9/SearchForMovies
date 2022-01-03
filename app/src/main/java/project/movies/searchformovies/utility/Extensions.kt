@@ -14,3 +14,5 @@ fun Int.convertPixelFromDp(context: Context): Int {
 fun Fragment.toast(message: String) {
     Toast.makeText(this.requireContext(), message, Toast.LENGTH_LONG).show()
 }
+
+fun Int?.orZero() = this ?: 0
