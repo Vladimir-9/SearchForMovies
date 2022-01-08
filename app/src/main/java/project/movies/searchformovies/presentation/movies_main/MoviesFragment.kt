@@ -26,7 +26,7 @@ import project.movies.searchformovies.utility.toast
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class MoviesFragment : Fragment(R.layout.fragment_movies) {
+class MoviesFragment : Fragment() {
 
     private val viewModel: MoviesViewModel by viewModels()
     private var viewBinding: FragmentMoviesBinding by autoCleared()
@@ -76,10 +76,10 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         val height: Int = (displayMetrics.heightPixels * 0.8f).roundToInt()
 
         adapterMovies = MoviesAdapter(width, height) { movies ->
-            val action = MoviesFragmentDirections.actionDisplayingMoviesToDetailMoviesDialog(
-                movies
-            )
-            findNavController().navigate(action)
+//            val action = MoviesFragmentDirections.actionDisplayingMoviesToDetailMoviesDialog(
+//                movies
+//            )
+//            findNavController().navigate(action)
         }
         with(viewBinding.rvMovies) {
             setFlingAble(false)
@@ -160,7 +160,7 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     private fun fabReactionToTheClick() {
         viewBinding.fab.setOnActionSelectedListener { actionItem ->
             when (actionItem.id) {
-                R.id.fab_favorites -> findNavController().navigate(R.id.action_displayingMovies_to_lookAllFavoritesFragment)
+//                R.id.fab_favorites -> findNavController().navigate(R.id.action_displayingMovies_to_lookAllFavoritesFragment)
             }
             false
         }

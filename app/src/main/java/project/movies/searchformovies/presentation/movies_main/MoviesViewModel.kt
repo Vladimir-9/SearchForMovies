@@ -72,6 +72,14 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
                 _moviesLiveDate.value = MoviesLoadState.Error("getStateSearchMovies")
         }
     }
+
+    fun saveFavoritesMovie(favoritesMovie: MoviesData) {
+        viewModelScope.launch {
+            try {
+                repository.saveFavoritesMovie(favoritesMovie)
+            } catch (t: Throwable) {}
+        }
+    }
 }
 
 sealed class MoviesLoadState {
