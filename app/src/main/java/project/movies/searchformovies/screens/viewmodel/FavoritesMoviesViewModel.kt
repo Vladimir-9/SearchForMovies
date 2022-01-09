@@ -1,4 +1,4 @@
-package project.movies.searchformovies.presentation.look_all_favorites
+package project.movies.searchformovies.screens.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +13,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class LookAllFavoritesViewModel @Inject constructor(
+class FavoritesMoviesViewModel @Inject constructor(
     private val repository: MoviesRepository
 ) : ViewModel() {
 

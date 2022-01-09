@@ -1,7 +1,6 @@
 package project.movies.searchformovies.data
 
 import project.movies.searchformovies.data.db.MoviesDao
-import project.movies.searchformovies.presentation.movies_main.MoviesLoadState
 import project.movies.searchformovies.remote.MoviesData
 import project.movies.searchformovies.remote.api.NetworkingApi
 import javax.inject.Inject

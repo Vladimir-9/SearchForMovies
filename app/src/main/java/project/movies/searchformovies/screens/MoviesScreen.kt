@@ -20,14 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import kotlinx.coroutines.launch
 import project.movies.searchformovies.MainActivity
 import project.movies.searchformovies.MainActivity.Companion.PATH_LOAD_IMAGE
 import project.movies.searchformovies.R
-import project.movies.searchformovies.presentation.movies_main.MoviesLoadState
-import project.movies.searchformovies.presentation.movies_main.MoviesViewModel
+import project.movies.searchformovies.screens.viewmodel.MoviesLoadState
+import project.movies.searchformovies.screens.viewmodel.MoviesViewModel
 import project.movies.searchformovies.remote.MoviesData
 import project.movies.searchformovies.screens.themes.*
 
@@ -62,7 +61,7 @@ fun MoviesScreen(
             ScreenBottomDialog(selectedMovie, viewModel, changeStateSheet)
         }
     ) {
-        ScreenMoviesLayout(navController,viewModel, changeStateSheet, getSelectedMovie)
+        ScreenMoviesLayout(navController, viewModel, changeStateSheet, getSelectedMovie)
     }
 }
 
@@ -134,11 +133,11 @@ private fun ScreenMoviesLayout(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {navController.navigate(MainActivity.ROUT_FAVORITES_MOVIES)},
+                onClick = { navController.navigate(MainActivity.ROUT_FAVORITES_MOVIES) },
                 backgroundColor = secondaryColor700()
             ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_done),
+                    painter = painterResource(R.drawable.ic_favourite),
                     contentDescription = "icon_search"
                 )
             }
@@ -270,7 +269,13 @@ fun ListMovies(
                                 modifier = Modifier.fillMaxWidth(),
                                 maxLines = 6
                             )
-                            Text(color = textColor(), text = movies.release_date.orEmpty())
+                            Text(
+                                color = textColor(),
+                                text = stringResource(
+                                    id = R.string.release,
+                                    movies.release_date.orEmpty()
+                                )
+                            )
                         }
                     }
                 }

@@ -15,18 +15,16 @@
         android:theme="@style/Theme.SearchForMovies"
         tools:ignore="LockedOrientationActivity">
         <activity
-            android:name=".SplashActivity"
-            android:theme="@style/SplashTheme"
+            android:name=".MainActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:exported="true">
+            android:theme="@style/SplashTheme"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
     </application>
 
 </manifest>

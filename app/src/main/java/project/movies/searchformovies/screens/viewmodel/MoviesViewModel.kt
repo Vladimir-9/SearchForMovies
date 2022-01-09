@@ -1,4 +1,4 @@
-package project.movies.searchformovies.presentation.movies_main
+package project.movies.searchformovies.screens.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
