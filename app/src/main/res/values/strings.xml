@@ -10,4 +10,5 @@
     <string name="cancel">Отмена</string>
     <string name="want_to_delete">Вы хотите удалить - %s</string>
     <string name="did_not_choose_anything">Вы ничего не выбрали</string>
+    <string name="no_data_available">"No data available"</string>
 </resources>

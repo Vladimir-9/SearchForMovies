@@ -36,12 +36,12 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
 
     private fun getStatePopularMovies(moviesList: List<MoviesData>) {
         when {
-             moviesList.isNotEmpty() -> {
+            moviesList.isNotEmpty() -> {
                 popularMovies = moviesList
                 _moviesLiveDate.value = MoviesLoadState.Success(moviesList)
             }
-             else -> {
-                _moviesLiveDate.value = MoviesLoadState.Error("getStatePopularMovies")
+            else -> {
+                _moviesLiveDate.value = MoviesLoadState.Error
             }
         }
     }
@@ -69,7 +69,7 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
             moviesList.isNotEmpty() ->
                 _moviesLiveDate.value = MoviesLoadState.Success(moviesList)
             else ->
-                _moviesLiveDate.value = MoviesLoadState.Error("getStateSearchMovies")
+                _moviesLiveDate.value = MoviesLoadState.Error
         }
     }
 
@@ -77,13 +77,14 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
         viewModelScope.launch {
             try {
                 repository.saveFavoritesMovie(favoritesMovie)
-            } catch (t: Throwable) {}
+            } catch (t: Throwable) {
+            }
         }
     }
 }
 
 sealed class MoviesLoadState {
     data class Success(val listMovies: List<MoviesData>) : MoviesLoadState()
-    data class Error(val errorMessage: String?) : MoviesLoadState()
+    object Error : MoviesLoadState()
     object LoadState : MoviesLoadState()
 }
