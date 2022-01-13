@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import project.movies.searchformovies.MainActivity
 import project.movies.searchformovies.MainActivity.Companion.PATH_LOAD_IMAGE
@@ -127,10 +128,12 @@ private fun ScreenMoviesLayout(
     getSelectedMovie: (MoviesData) -> Unit
 ) {
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         backgroundColor = primaryColor500(),
         modifier = Modifier.fillMaxSize(),
+
         scaffoldState = scaffoldState,
         floatingActionButton = {
             FloatingActionButton(
@@ -145,16 +148,24 @@ private fun ScreenMoviesLayout(
         }
     ) {
         Column {
-            CreateSearchField(viewModel)
-            SearchMoviesLayout(scaffoldState, viewModel, changeStateSheet, getSelectedMovie)
+            CreateSearchField(viewModel, coroutineScope, scaffoldState)
+            SearchMoviesLayout(
+                scaffoldState,
+                coroutineScope,
+                viewModel,
+                changeStateSheet,
+                getSelectedMovie
+            )
         }
-
-
     }
 }
 
 @Composable
-private fun CreateSearchField(viewModel: MoviesViewModel) {
+private fun CreateSearchField(
+    viewModel: MoviesViewModel,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
+) {
     var text by remember { mutableStateOf("") }
 
     Box(
@@ -180,7 +191,7 @@ private fun CreateSearchField(viewModel: MoviesViewModel) {
                 label = { Text(stringResource(id = R.string.search_by_movie_title)) },
                 shape = RoundedCornerShape(16.dp),
                 trailingIcon = {
-                    ButtonSearch(viewModel, text)
+                    ButtonSearch(viewModel, text, scaffoldState, scope)
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     focusedLabelColor = grey(),
@@ -196,15 +207,19 @@ private fun CreateSearchField(viewModel: MoviesViewModel) {
 @Composable
 private fun SearchMoviesLayout(
     scaffoldState: ScaffoldState,
+    scope: CoroutineScope,
     viewModel: MoviesViewModel,
     changeStateSheet: () -> Unit,
     getSelectedMovie: (MoviesData) -> Unit
 ) {
     val isVisibleProgressBar = remember { mutableStateOf(false) }
+    val isVisibleReloadButton = remember { mutableStateOf(false) }
+
     ProgressBar(isVisibleProgressBar.value)
 
+    Reload(isVisibleReloadButton.value) { viewModel.getPopularMovies() }
+
     val viewState = viewModel.moviesLiveDate.observeAsState()
-    val coroutineScope = rememberCoroutineScope()
 
     when (val stateMovies = (viewState.value as MoviesLoadState)) {
         is MoviesLoadState.Success -> {
@@ -213,29 +228,42 @@ private fun SearchMoviesLayout(
             ListMovies(listMovies, changeStateSheet, getSelectedMovie)
             isVisibleProgressBar.value = false
         }
-        is MoviesLoadState.LoadState -> isVisibleProgressBar.value = true
+        is MoviesLoadState.LoadState -> {
+            isVisibleProgressBar.value = true
+            isVisibleReloadButton.value = false
+        }
 
         is MoviesLoadState.Error -> {
             isVisibleProgressBar.value = false
+            isVisibleReloadButton.value = true
+
             val errorMassage = stringResource(id = R.string.no_data_available)
-            showSnackBar(scaffoldState, coroutineScope, errorMassage)
+            LaunchedEffect(key1 = MoviesLoadState.Error, block = {
+                showSnackBar(scaffoldState, scope, errorMassage)
+            })
         }
     }
 }
 
 @Composable
-private fun ButtonSearch(viewModel: MoviesViewModel, text: String) {
+private fun ButtonSearch(
+    viewModel: MoviesViewModel,
+    searchResponse: String,
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope
+) {
+    val messageEmptyResponse = stringResource(id = R.string.enter_movie)
+
     Button(
         onClick = {
-            if (text.isNotEmpty()) {
-                viewModel.getSearchMovies(text)
-            } else {
-                // toast(getString(R.string.enter_movie))
-            }
+            if (searchResponse.isNotEmpty())
+                viewModel.getSearchMovies(searchResponse)
+            else
+                showSnackBar(scaffoldState, scope, messageEmptyResponse)
         },
         modifier = Modifier
             .fillMaxHeight(),
-        colors = ButtonDefaults.outlinedButtonColors(contentColor = grey()),
+        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = grey()),
         shape = RoundedCornerShape(16.dp),
     ) {
         Image(

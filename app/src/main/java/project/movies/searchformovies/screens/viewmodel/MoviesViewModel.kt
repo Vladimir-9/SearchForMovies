@@ -23,7 +23,7 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
         getPopularMovies()
     }
 
-    private fun getPopularMovies() {
+    fun getPopularMovies() {
         viewModelScope.launch {
             _moviesLiveDate.value = MoviesLoadState.LoadState
             val awaitPopularMoviesState = async {
