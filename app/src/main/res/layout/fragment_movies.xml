@@ -18,6 +18,7 @@
         android:background="@drawable/shape_search_movies"
         android:hint="@string/search_by_movie_title"
         android:textColorHint="@color/gray"
+        android:inputType="text"
         app:layout_constraintEnd_toStartOf="@id/bt_search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

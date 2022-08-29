@@ -1,8 +1,6 @@
 package project.movies.searchformovies.presentation.movies_main
 
 import android.content.Context
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
-import project.movies.searchformovies.connectivity_info.NetworkChangeReceiver
 import project.movies.searchformovies.databinding.FragmentMoviesBinding
 import project.movies.searchformovies.presentation.adapter.MoviesAdapter
 import project.movies.searchformovies.utility.MoviesItemDecoration
@@ -28,7 +25,6 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     private val viewModel: MoviesViewModel by viewModels()
     private var viewBinding: FragmentMoviesBinding by autoCleared()
     private var adapterMovies: MoviesAdapter by autoCleared()
-    private var receiver: NetworkChangeReceiver? = null
     private var responseMovies = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,7 +33,6 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         collectingRemoteMovies()
         initRecyclerView()
         listenerSearchQuery()
-        registerReceiver()
         fabInit()
         fabReactionToTheClick()
         viewBinding.btSearch.setOnClickListener {
@@ -49,21 +44,13 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         }
     }
 
-    private fun registerReceiver() {
-        receiver = NetworkChangeReceiver()
-        requireContext().registerReceiver(
-            receiver,
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
-    }
-
     private fun searchMovies() {
         val searchQuestion = viewBinding.etEnterSearch.text.toString()
         if (searchQuestion.isNotEmpty() && responseMovies != searchQuestion) {
             responseMovies = viewBinding.etEnterSearch.text.toString()
             viewModel.getSearchMovies(viewBinding.etEnterSearch.text.toString())
         } else {
-            toast(getString(R.string.enter_movie))
+            requireContext().toast(getString(R.string.enter_movie))
         }
     }
 
@@ -152,10 +139,4 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (receiver != null)
-            requireContext().unregisterReceiver(receiver)
-        receiver = null
-    }
 }
