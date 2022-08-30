@@ -6,4 +6,5 @@
     <string name="error_load_movies">Не удалось загрузить данные</string>
     <string name="enter_movie">Введите название фильма</string>
     <string name="favourites">В избранное</string>
+    <string name="you_not_choose_anything">you_not_choose_anything</string>
 </resources>

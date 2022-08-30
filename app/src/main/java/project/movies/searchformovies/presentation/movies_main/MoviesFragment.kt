@@ -2,11 +2,10 @@ package project.movies.searchformovies.presentation.movies_main
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -32,9 +31,13 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         viewBinding = FragmentMoviesBinding.bind(view)
         collectingRemoteMovies()
         initRecyclerView()
-        listenerSearchQuery()
         fabInit()
         fabReactionToTheClick()
+        viewBinding.etEnterSearch.doAfterTextChanged {
+            if (it?.isEmpty() == true) {
+                viewModel.getSearchMovies("")
+            }
+        }
         viewBinding.btSearch.setOnClickListener {
             searchMovies()
             hideKeyboard()
@@ -68,46 +71,23 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         }
     }
 
-    private fun listenerSearchQuery() {
-        viewBinding.etEnterSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s!!.isEmpty()) {
-                    viewModel.getSearchMovies("")
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-
     private fun collectingRemoteMovies() {
-        viewModel.moviesLiveDate.observe(viewLifecycleOwner) {
-            when (it) {
-                is MoviesLoadState.Success -> {
-                    adapterMovies.items = it.listMovies
-                    visibleElementAfterError(false)
-                    isEnableButton(true)
-                    viewBinding.progressBar.isVisible = false
-                }
-                is MoviesLoadState.Error -> {
-                    visibleElementAfterError(true)
-                    isEnableButton(true)
-                    viewBinding.progressBar.isVisible = false
-                }
-                is MoviesLoadState.LoadState -> {
-                    viewBinding.progressBar.isVisible = true
-                    viewBinding.rvMovies.isVisible = false
-                    isEnableButton(false)
-                }
-            }
+        viewModel.viewState.observe(viewLifecycleOwner) {
+            viewBinding.progressBar.isVisible = it.isLoading
+            isEnableButton(it.isLoading.not())
+
+            if (it.listMovies.isNotEmpty())
+                adapterMovies.items = it.listMovies
+
+            visibleElementAfterError(it.error.isNotEmpty())
         }
     }
 
     private fun isEnableButton(isEnabled: Boolean) {
-        viewBinding.btSearch.isEnabled = isEnabled
-        viewBinding.btReloadData.isEnabled = isEnabled
+        with(viewBinding) {
+            btSearch.isEnabled = isEnabled
+            btReloadData.isEnabled = isEnabled
+        }
     }
 
     private fun hideKeyboard() {
@@ -117,9 +97,11 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     }
 
     private fun visibleElementAfterError(isVisible: Boolean) {
-        viewBinding.ivError.isVisible = isVisible
-        viewBinding.btReloadData.isVisible = isVisible
-        viewBinding.rvMovies.isVisible = isVisible.not()
+        with(viewBinding) {
+            ivError.isVisible = isVisible
+            btReloadData.isVisible = isVisible
+            rvMovies.isVisible = isVisible.not()
+        }
     }
 
     private fun fabInit() {
@@ -138,5 +120,4 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
             false
         }
     }
-
 }

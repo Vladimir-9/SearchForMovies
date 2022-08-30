@@ -17,7 +17,7 @@
         android:id="@+id/tw_not_selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Вы ничего не выбрали"
+        android:text="@string/you_not_choose_anything"
         android:textSize="18sp"
         android:layout_gravity="center"/>
 

@@ -3,6 +3,7 @@ package project.movies.searchformovies.utility
 import android.content.Context
 import android.util.DisplayMetrics
 import android.widget.Toast
+import retrofit2.Response
 
 fun Int.convertPixelFromDp(context: Context): Int {
     val density = context.resources.displayMetrics.densityDpi
@@ -15,3 +16,13 @@ fun Context.toast(message: String) {
 }
 
 fun Int?.orZero(): Int = this ?: 0
+
+fun <T, S> Response<T>.toResource(
+    transform: (source: T?) -> S
+): Resource<S> {
+    return if (isSuccessful)
+        Resource.Success(
+            transform(body())
+        )
+    else Resource.Error(code(), errorBody()?.string())
+}
