@@ -6,11 +6,11 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import project.movies.searchformovies.data.db.MoviesDao
+import project.movies.searchformovies.data.local.MoviesDao
+import project.movies.searchformovies.data.remote.NetworkingApi
+import project.movies.searchformovies.data.remote.dto.RemoteMoviesDto
+import project.movies.searchformovies.domain.model.MoviesData
 import project.movies.searchformovies.presentation.movies_main.MoviesLoadState
-import project.movies.searchformovies.remote.MoviesData
-import project.movies.searchformovies.remote.RemoteMovies
-import project.movies.searchformovies.remote.api.NetworkingApi
 
 class MoviesRepositoryImplTest {
 
@@ -76,11 +76,11 @@ class MoviesRepositoryImplTest {
     private fun mockSearchOrPopularMovies(isPopular: Boolean) {
         runBlocking {
             if (isPopular) {
-                Mockito.`when`(networkingApi.popularMovies(any(), any(), any(), any(), any()))
+                Mockito.`when`(networkingApi.popularMovies(any(), any(), any(), any()))
                     .thenReturn(mockRemoteMovies)
                     .thenThrow(RuntimeException())
             } else {
-                Mockito.`when`(networkingApi.searchMovies(any(), any(), any(), any()))
+                Mockito.`when`(networkingApi.searchMovies(any(), any(), any()))
                     .thenReturn(mockRemoteMovies)
                     .thenThrow(RuntimeException())
             }
@@ -88,6 +88,6 @@ class MoviesRepositoryImplTest {
     }
 
     companion object {
-        val mockRemoteMovies = RemoteMovies(1, emptyList())
+        val mockRemoteMovies = RemoteMoviesDto(1, emptyList())
     }
 }

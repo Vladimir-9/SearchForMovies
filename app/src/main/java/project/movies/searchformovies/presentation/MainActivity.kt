@@ -1,8 +1,9 @@
-package project.movies.searchformovies
+package project.movies.searchformovies.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import project.movies.searchformovies.R
 import project.movies.searchformovies.utility.ConnectionStateMonitor
 import project.movies.searchformovies.utility.toast
 import javax.inject.Inject

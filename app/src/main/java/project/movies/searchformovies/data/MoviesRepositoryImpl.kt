@@ -1,9 +1,11 @@
 package project.movies.searchformovies.data
 
-import project.movies.searchformovies.data.db.MoviesDao
-import project.movies.searchformovies.presentation.movies_main.MoviesLoadState
-import project.movies.searchformovies.remote.MoviesData
-import project.movies.searchformovies.remote.api.NetworkingApi
+import project.movies.searchformovies.data.local.MoviesDao
+import project.movies.searchformovies.data.local.MoviesEntity
+import project.movies.searchformovies.data.mapper.toMoviesData
+import project.movies.searchformovies.data.remote.NetworkingApi
+import project.movies.searchformovies.domain.model.MoviesData
+import project.movies.searchformovies.domain.repositories.MoviesRepository
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
@@ -13,7 +15,8 @@ class MoviesRepositoryImpl @Inject constructor(
 
     override suspend fun searchPopularMovies(): List<MoviesData> {
         return try {
-            networkingApi.popularMovies().results
+            val movies = networkingApi.popularMovies().results
+            movies?.map { it.toMoviesData() }.orEmpty()
         } catch (e: Exception) {
             emptyList()
         }
@@ -21,18 +24,20 @@ class MoviesRepositoryImpl @Inject constructor(
 
     override suspend fun searchMovies(searchResponse: String): List<MoviesData> {
         return try {
-            networkingApi.searchMovies(query = searchResponse).results
+            val movies = networkingApi.searchMovies(query = searchResponse).results
+            movies?.map { it.toMoviesData() }.orEmpty()
         } catch (e: Exception) {
             emptyList()
         }
     }
 
-    override suspend fun saveFavoritesMovie(favoritesMovie: MoviesData) {
+    override suspend fun saveFavoritesMovie(favoritesMovie: MoviesEntity) {
         favoritesMovieDao.insertMovies(favoritesMovie)
     }
 
     override suspend fun getAllFavoritesMovie(): List<MoviesData> {
-        return favoritesMovieDao.getAllMovies()
+        val moviesEntity = favoritesMovieDao.getAllMovies()
+        return moviesEntity.map { it.toMoviesData() }
     }
 
     override suspend fun removeFavoritesMovie(favoriteId: Int) {

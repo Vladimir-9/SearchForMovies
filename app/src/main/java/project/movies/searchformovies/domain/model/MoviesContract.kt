@@ -1,4 +1,4 @@
-package project.movies.searchformovies.data.db.models
+package project.movies.searchformovies.domain.model
 
 object MoviesContract {
     const val TABLE_NAME = "favouritesMovies"

@@ -1,11 +1,11 @@
-package project.movies.searchformovies.presentation.detail_information
+package project.movies.searchformovies.presentation.movies_main.detail_information
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.data.MoviesRepository
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.data.local.MoviesEntity
+import project.movies.searchformovies.domain.repositories.MoviesRepository
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class DetailInformationViewModel @Inject constructor(
     private val repository: MoviesRepository
 ) : ViewModel() {
 
-    fun saveFavoritesMovie(favoritesMovie: MoviesData) {
+    fun saveFavoritesMovie(favoritesMovie: MoviesEntity) {
         viewModelScope.launch {
             try {
                 repository.saveFavoritesMovie(favoritesMovie)
@@ -23,6 +23,4 @@ class DetailInformationViewModel @Inject constructor(
             }
         }
     }
-
-
 }

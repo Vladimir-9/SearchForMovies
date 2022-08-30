@@ -2,7 +2,7 @@ package project.movies.searchformovies.presentation.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.domain.model.MoviesData
 
 class MoviesAdapter(itemClick: (movies: MoviesData) -> Unit) :
     AsyncListDifferDelegationAdapter<MoviesData>(MoviesDiffUtil()) {

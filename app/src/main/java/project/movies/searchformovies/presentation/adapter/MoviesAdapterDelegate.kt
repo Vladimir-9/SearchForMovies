@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.ItemMovieBinding
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.domain.model.MoviesData
 
 class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit) :
     AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
@@ -45,13 +45,13 @@ class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit)
 
             Glide
                 .with(itemView)
-                .load(PATH_LOAD_IMAGE + movies.poster_path)
+                .load(PATH_LOAD_IMAGE + movies.posterPath)
                 .placeholder(R.drawable.ic_movie)
                 .error(R.drawable.ic_not_poster)
                 .into(viewBinding.ivMovie)
             viewBinding.twTitleMovie.text = movies.title
             viewBinding.twDescription.text = movies.description
-            viewBinding.twReleaseDate.text = movies.release_date
+            viewBinding.twReleaseDate.text = movies.releaseDate
             sendMovie(movies)
         }
 

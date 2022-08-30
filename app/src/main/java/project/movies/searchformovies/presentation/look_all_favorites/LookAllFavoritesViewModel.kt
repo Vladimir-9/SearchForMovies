@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.data.MoviesRepository
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.domain.model.MoviesData
+import project.movies.searchformovies.domain.repositories.MoviesRepository
 import timber.log.Timber
 import javax.inject.Inject
 

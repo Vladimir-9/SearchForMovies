@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.data.MoviesRepository
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.domain.model.MoviesData
+import project.movies.searchformovies.domain.repositories.MoviesRepository
 import javax.inject.Inject
 
 @HiltViewModel

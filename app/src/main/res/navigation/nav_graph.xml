@@ -19,12 +19,12 @@
     </fragment>
     <dialog
         android:id="@+id/detailMoviesDialog"
-        android:name="project.movies.searchformovies.presentation.detail_information.DetailInformationDialog"
+        android:name="project.movies.searchformovies.presentation.movies_main.detail_information.DetailInformationDialog"
         android:label="DetailMoviesDialog"
         tools:layout="@layout/dialog_detail_information">
         <argument
             android:name="movie"
-            app:argType="project.movies.searchformovies.remote.MoviesData" />
+            app:argType="project.movies.searchformovies.domain.model.MoviesData" />
     </dialog>
     <fragment
         android:id="@+id/lookAllFavoritesFragment"

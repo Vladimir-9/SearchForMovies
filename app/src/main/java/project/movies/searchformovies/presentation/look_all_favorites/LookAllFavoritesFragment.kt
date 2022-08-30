@@ -18,8 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.FragmentLookAllFavoritesBinding
+import project.movies.searchformovies.domain.model.MoviesData
 import project.movies.searchformovies.presentation.adapter.MoviesAdapter
-import project.movies.searchformovies.remote.MoviesData
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 

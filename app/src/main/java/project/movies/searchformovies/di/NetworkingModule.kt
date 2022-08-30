@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import project.movies.searchformovies.remote.api.NetworkingApi
+import project.movies.searchformovies.data.remote.NetworkingApi
 import project.movies.searchformovies.utility.ApiInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory

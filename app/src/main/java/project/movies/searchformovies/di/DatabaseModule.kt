@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import project.movies.searchformovies.data.db.MoviesDao
-import project.movies.searchformovies.data.db.MoviesDatabase
+import project.movies.searchformovies.data.local.MoviesDao
+import project.movies.searchformovies.data.local.MoviesDatabase
 import javax.inject.Singleton
 
 @Module
