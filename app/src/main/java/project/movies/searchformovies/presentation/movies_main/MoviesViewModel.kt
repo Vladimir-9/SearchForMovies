@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import project.movies.searchformovies.domain.model.MoviesData
 import project.movies.searchformovies.domain.model.MoviesViewState
@@ -15,6 +16,13 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviesViewModel @Inject constructor(private val repository: MoviesRepository) : ViewModel() {
 
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        _viewState.postValue(_viewState.value?.copy(
+                error = throwable.message.orEmpty(),
+                isLoading = false
+            ))
+    }
+
     private val _viewState = MutableLiveData(MoviesViewState())
     val viewState: LiveData<MoviesViewState> = _viewState
 
@@ -23,7 +31,7 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
     }
 
     private fun getPopularMovies() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             _viewState.postValue(_viewState.value?.copy(isLoading = true))
             val resListMovies = repository.searchPopularMovies()
             setResult(resListMovies)
@@ -31,7 +39,7 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
     }
 
     private fun searchMovies(searchResponse: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             _viewState.postValue(_viewState.value?.copy(isLoading = true))
             val resListMovies = repository.searchMovies(searchResponse)
             setResult(resListMovies)
@@ -42,7 +50,8 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
         when (resListMovies) {
             is Resource.Success -> _viewState.postValue(_viewState.value?.copy(
                 listMovies = resListMovies.data.orEmpty(),
-                isLoading = false
+                isLoading = false,
+                error = ""
             ))
             is Resource.Error -> _viewState.postValue(_viewState.value?.copy(
                 error = "error",
@@ -52,11 +61,7 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
     }
 
     fun getSearchMovies(searchResponse: String) {
-        when {
-            searchResponse != "" -> searchMovies(searchResponse)
-//            popularMovies.isNotEmpty() -> _viewState.value =
-//                MoviesLoadState.Success(popularMovies)
-            else -> getPopularMovies()
-        }
+        if (searchResponse.isNotBlank()) searchMovies(searchResponse)
+        else getPopularMovies()
     }
 }

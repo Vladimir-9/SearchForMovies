@@ -1,9 +1,7 @@
 package project.movies.searchformovies.presentation.movies_main
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -16,6 +14,7 @@ import project.movies.searchformovies.databinding.FragmentMoviesBinding
 import project.movies.searchformovies.presentation.adapter.MoviesAdapter
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
+import project.movies.searchformovies.utility.hideKeyboard
 import project.movies.searchformovies.utility.toast
 
 @AndroidEntryPoint
@@ -29,18 +28,20 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentMoviesBinding.bind(view)
-        collectingRemoteMovies()
+        observeViewModel()
         initRecyclerView()
         fabInit()
         fabReactionToTheClick()
+
         viewBinding.etEnterSearch.doAfterTextChanged {
             if (it?.isEmpty() == true) {
                 viewModel.getSearchMovies("")
+                responseMovies = ""
             }
         }
         viewBinding.btSearch.setOnClickListener {
             searchMovies()
-            hideKeyboard()
+            viewBinding.root.hideKeyboard()
         }
         viewBinding.btReloadData.setOnClickListener {
             searchMovies()
@@ -49,9 +50,10 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
     private fun searchMovies() {
         val searchQuestion = viewBinding.etEnterSearch.text.toString()
+
         if (searchQuestion.isNotEmpty() && responseMovies != searchQuestion) {
-            responseMovies = viewBinding.etEnterSearch.text.toString()
-            viewModel.getSearchMovies(viewBinding.etEnterSearch.text.toString())
+            responseMovies = searchQuestion
+            viewModel.getSearchMovies(searchQuestion)
         } else {
             requireContext().toast(getString(R.string.enter_movie))
         }
@@ -71,15 +73,18 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         }
     }
 
-    private fun collectingRemoteMovies() {
-        viewModel.viewState.observe(viewLifecycleOwner) {
-            viewBinding.progressBar.isVisible = it.isLoading
-            isEnableButton(it.isLoading.not())
+    private fun observeViewModel() {
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+            viewBinding.progressBar.isVisible = viewState.isLoading
+            isEnableButton(viewState.isLoading.not())
 
-            if (it.listMovies.isNotEmpty())
-                adapterMovies.items = it.listMovies
+            if (viewState.listMovies.isNotEmpty())
+                adapterMovies.items = viewState.listMovies
 
-            visibleElementAfterError(it.error.isNotEmpty())
+            val isError = viewState.error.isNotEmpty()
+            visibleElementAfterError(isError)
+
+            if (isError) responseMovies = ""
         }
     }
 
@@ -88,12 +93,6 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
             btSearch.isEnabled = isEnabled
             btReloadData.isEnabled = isEnabled
         }
-    }
-
-    private fun hideKeyboard() {
-        val imm =
-            activity?.applicationContext?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm!!.hideSoftInputFromWindow(viewBinding.constraintLayout.windowToken, 0)
     }
 
     private fun visibleElementAfterError(isVisible: Boolean) {
