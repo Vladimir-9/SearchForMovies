@@ -7,4 +7,7 @@
     <string name="enter_movie">Введите название фильма</string>
     <string name="to_favourites">В избранное</string>
     <string name="favorites_empty">Вы ничего не добавили в избранное</string>
+    <string name="do_you_want_delete">Вы хотите удалить</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
 </resources>
