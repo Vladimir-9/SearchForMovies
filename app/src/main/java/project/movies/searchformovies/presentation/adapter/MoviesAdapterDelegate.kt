@@ -9,6 +9,8 @@ import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.ItemMovieBinding
 import project.movies.searchformovies.domain.model.MoviesData
+import project.movies.searchformovies.utility.DateFormat
+import project.movies.searchformovies.utility.dateConverter
 
 class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit) :
     AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
@@ -41,7 +43,18 @@ class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit)
 
         fun bind(movies: MoviesData) {
             viewBinding = ItemMovieBinding.bind(itemView)
-            viewBinding.ivMovie.clipToOutline = true
+            with(viewBinding) {
+                ivMovie.clipToOutline = true
+                twTitleMovie.text = movies.title
+                twDescription.text = movies.description
+
+                val dateRelease = movies.releaseDate.dateConverter(
+                    DateFormat.YEAR_MONTH_DAY,
+                    DateFormat.DAY_FULL_MONTH_YEAR
+                )
+                val concatText = "${root.context.getString(R.string.release)} $dateRelease"
+                twReleaseDate.text = concatText
+            }
 
             Glide
                 .with(itemView)
@@ -49,9 +62,7 @@ class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit)
                 .placeholder(R.drawable.ic_movie)
                 .error(R.drawable.ic_not_poster)
                 .into(viewBinding.ivMovie)
-            viewBinding.twTitleMovie.text = movies.title
-            viewBinding.twDescription.text = movies.description
-            viewBinding.twReleaseDate.text = movies.releaseDate
+
             sendMovie(movies)
         }
 

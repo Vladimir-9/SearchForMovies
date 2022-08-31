@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="titleText">
+        <item name="android:textColor">@color/title_text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/appetite_italic</item>
+    </style>
+
+    <style name="mainText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/font_medium</item>
+    </style>
+
+    <style name="subText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/font_regular</item>
+    </style>
+
+</resources>

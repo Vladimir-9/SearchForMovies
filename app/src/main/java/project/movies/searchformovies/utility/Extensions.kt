@@ -17,6 +17,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Response
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun Int.convertPixelFromDp(context: Context): Int {
     val density = context.resources.displayMetrics.densityDpi
@@ -75,4 +78,16 @@ fun Context.getTextWithColor(text: SpannableString, @ColorRes textColor: Int): S
         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
     )
     return text
+}
+
+fun String.dateConverter(from: DateFormat, to: DateFormat): String {
+    return try {
+        val format = SimpleDateFormat(from.format, Locale.getDefault())
+        val date = format.parse(this)
+        val actualFormat = SimpleDateFormat(to.format, Locale.getDefault())
+        date?.let { actualFormat.format(date) } ?: ""
+    } catch (e: ParseException) {
+        e.printStackTrace()
+        ""
+    }
 }
