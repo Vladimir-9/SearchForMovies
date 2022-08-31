@@ -2,6 +2,7 @@ package project.movies.searchformovies.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
 import project.movies.searchformovies.utility.ConnectionStateMonitor
@@ -15,6 +16,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var connectionState: ConnectionStateMonitor
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
