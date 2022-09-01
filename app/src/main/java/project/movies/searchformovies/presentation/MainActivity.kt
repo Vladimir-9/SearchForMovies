@@ -13,7 +13,8 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var connectionState: ConnectionStateMonitor
+    @JvmField
+    var connectionState: ConnectionStateMonitor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -26,8 +27,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        connectionState.enable()
-        connectionState.lostNetwork = {
+        connectionState?.enable()
+        connectionState?.lostNetwork = {
             runOnUiThread {
                 toast(getString(R.string.no_internet))
             }
@@ -36,6 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        connectionState.unregister()
+        connectionState?.unregister()
     }
 }
