@@ -14,9 +14,12 @@
 
     <TextView
         android:id="@+id/tw_not_selected"
+        style="@style/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Вы ничего не выбрали"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:text="@string/favorites_empty"
         android:textSize="18sp"
         android:layout_gravity="center"/>
 

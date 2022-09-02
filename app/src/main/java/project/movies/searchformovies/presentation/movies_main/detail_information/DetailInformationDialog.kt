@@ -1,4 +1,4 @@
-package project.movies.searchformovies.presentation.detail_information
+package project.movies.searchformovies.presentation.movies_main.detail_information
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
+import project.movies.searchformovies.data.mapper.toMoviesEntity
 import project.movies.searchformovies.databinding.DialogDetailInformationBinding
 import project.movies.searchformovies.presentation.adapter.MoviesAdapterDelegate.Companion.PATH_LOAD_IMAGE
 import project.movies.searchformovies.utility.autoCleared
@@ -40,7 +41,7 @@ class DetailInformationDialog : BottomSheetDialogFragment() {
 
         viewBinding.ivMovie.clipToOutline = true
         Glide.with(view)
-            .load(PATH_LOAD_IMAGE + args.movie.backdrop_path)
+            .load(PATH_LOAD_IMAGE + args.movie.backdropPath)
             .placeholder(R.drawable.ic_movie)
             .error(R.drawable.ic_not_poster)
             .into(viewBinding.ivMovie)
@@ -52,7 +53,7 @@ class DetailInformationDialog : BottomSheetDialogFragment() {
     }
 
     private fun saveFavoritesMovie() {
-        viewModel.saveFavoritesMovie(args.movie)
+        viewModel.saveFavoritesMovie(args.movie.toMoviesEntity())
         findNavController().popBackStack()
     }
 }

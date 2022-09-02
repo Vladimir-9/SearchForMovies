@@ -5,77 +5,63 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.data.MoviesRepository
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.domain.model.MoviesData
+import project.movies.searchformovies.domain.model.MoviesViewState
+import project.movies.searchformovies.domain.repositories.MoviesRepository
+import project.movies.searchformovies.utility.Resource
 import javax.inject.Inject
 
 @HiltViewModel
 class MoviesViewModel @Inject constructor(private val repository: MoviesRepository) : ViewModel() {
 
-    private var popularMovies = listOf<MoviesData>()
-    private val _moviesLiveDate = MutableLiveData<MoviesLoadState>()
-    val moviesLiveDate: LiveData<MoviesLoadState>
-        get() = _moviesLiveDate
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        _viewState.postValue(_viewState.value?.copy(
+                error = throwable.message.orEmpty(),
+                isLoading = false
+            ))
+    }
+
+    private val _viewState = MutableLiveData(MoviesViewState())
+    val viewState: LiveData<MoviesViewState> = _viewState
 
     init {
         getPopularMovies()
     }
 
     private fun getPopularMovies() {
-        viewModelScope.launch {
-            _moviesLiveDate.value = MoviesLoadState.LoadState
-            val awaitPopularMoviesState = async {
-                repository.searchPopularMovies()
-            }
-            val moviesList = awaitPopularMoviesState.await()
-            getStatePopularMovies(moviesList)
-        }
-    }
-
-    private fun getStatePopularMovies(moviesList: List<MoviesData>) {
-        when {
-             moviesList.isNotEmpty() -> {
-                popularMovies = moviesList
-                _moviesLiveDate.value = MoviesLoadState.Success(moviesList)
-            }
-             else -> {
-                _moviesLiveDate.value = MoviesLoadState.Error("getStatePopularMovies")
-            }
-        }
-    }
-
-    fun getSearchMovies(searchResponse: String) {
-        when {
-            searchResponse != "" -> searchMovies(searchResponse)
-            popularMovies.isNotEmpty() -> _moviesLiveDate.value =
-                MoviesLoadState.Success(popularMovies)
-            else -> getPopularMovies()
+        viewModelScope.launch(exceptionHandler) {
+            _viewState.postValue(_viewState.value?.copy(isLoading = true))
+            val resListMovies = repository.searchPopularMovies()
+            setResult(resListMovies)
         }
     }
 
     private fun searchMovies(searchResponse: String) {
-        viewModelScope.launch {
-            _moviesLiveDate.value = MoviesLoadState.LoadState
-            val awaitMoviesState = async { repository.searchMovies(searchResponse) }
-            val moviesList = awaitMoviesState.await()
-            getStateSearchMovies(moviesList)
+        viewModelScope.launch(exceptionHandler) {
+            _viewState.postValue(_viewState.value?.copy(isLoading = true))
+            val resListMovies = repository.searchMovies(searchResponse)
+            setResult(resListMovies)
         }
     }
 
-    private fun getStateSearchMovies(moviesList: List<MoviesData>) {
-        when {
-            moviesList.isNotEmpty() ->
-                _moviesLiveDate.value = MoviesLoadState.Success(moviesList)
-            else ->
-                _moviesLiveDate.value = MoviesLoadState.Error("getStateSearchMovies")
+    private fun setResult(resListMovies: Resource<List<MoviesData>>){
+        when (resListMovies) {
+            is Resource.Success -> _viewState.postValue(_viewState.value?.copy(
+                listMovies = resListMovies.data.orEmpty(),
+                isLoading = false,
+                error = ""
+            ))
+            is Resource.Error -> _viewState.postValue(_viewState.value?.copy(
+                error = "error",
+                isLoading = false
+            ))
         }
     }
-}
 
-sealed class MoviesLoadState {
-    data class Success(val listMovies: List<MoviesData>) : MoviesLoadState()
-    data class Error(val errorMessage: String?) : MoviesLoadState()
-    object LoadState : MoviesLoadState()
+    fun getSearchMovies(searchResponse: String) {
+        if (searchResponse.isNotBlank()) searchMovies(searchResponse)
+        else getPopularMovies()
+    }
 }

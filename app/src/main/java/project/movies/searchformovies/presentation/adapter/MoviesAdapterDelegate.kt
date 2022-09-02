@@ -8,20 +8,16 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.ItemMovieBinding
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.domain.model.MoviesData
+import project.movies.searchformovies.utility.DateFormat
+import project.movies.searchformovies.utility.dateConverter
 
-class MoviesAdapterDelegate(
-    private var width: Int,
-    private val height: Int,
-    private val itemClick: (movies: MoviesData) -> Unit
-) : AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
+class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit) :
+    AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
-        val view = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_movie, parent, false)
-        view.layoutParams = RecyclerView.LayoutParams(width, height)
-        return ViewHolder(view, itemClick)
+        val inflater = LayoutInflater.from(parent.context)
+        return ViewHolder(inflater.inflate(R.layout.item_movie, parent, false), itemClick)
     }
 
     override fun onBindViewHolder(
@@ -47,17 +43,26 @@ class MoviesAdapterDelegate(
 
         fun bind(movies: MoviesData) {
             viewBinding = ItemMovieBinding.bind(itemView)
-            viewBinding.ivMovie.clipToOutline = true
+            with(viewBinding) {
+                ivMovie.clipToOutline = true
+                twTitleMovie.text = movies.title
+                twDescription.text = movies.description
+
+                val dateRelease = movies.releaseDate.dateConverter(
+                    DateFormat.YEAR_MONTH_DAY,
+                    DateFormat.DAY_FULL_MONTH_YEAR
+                )
+                val concatText = "${root.context.getString(R.string.release)} $dateRelease"
+                twReleaseDate.text = concatText
+            }
 
             Glide
                 .with(itemView)
-                .load(PATH_LOAD_IMAGE + movies.backdrop_path)
+                .load(PATH_LOAD_IMAGE + movies.posterPath)
                 .placeholder(R.drawable.ic_movie)
                 .error(R.drawable.ic_not_poster)
                 .into(viewBinding.ivMovie)
-            viewBinding.twTitleMovie.text = movies.title
-            viewBinding.twDescription.text = movies.description
-            viewBinding.twReleaseDate.text = movies.release_date
+
             sendMovie(movies)
         }
 

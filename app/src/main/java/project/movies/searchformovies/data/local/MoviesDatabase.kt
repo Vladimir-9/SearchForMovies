@@ -1,14 +1,12 @@
-package project.movies.searchformovies.data.db
+package project.movies.searchformovies.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import project.movies.searchformovies.data.db.MoviesDatabase.Companion.DB_VERSION
-import project.movies.searchformovies.remote.MoviesData
+import project.movies.searchformovies.data.local.MoviesDatabase.Companion.DB_VERSION
 
 @Database(
-    entities = [
-        MoviesData::class
-    ], version = DB_VERSION
+    entities = [MoviesEntity::class],
+    version = DB_VERSION
 )
 
 abstract class MoviesDatabase : RoomDatabase() {

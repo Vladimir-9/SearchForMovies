@@ -3,14 +3,17 @@ package project.movies.searchformovies.data
 import com.nhaarman.mockitokotlin2.any
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.http.RealResponseBody
+import okio.Buffer
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import project.movies.searchformovies.data.db.MoviesDao
-import project.movies.searchformovies.presentation.movies_main.MoviesLoadState
-import project.movies.searchformovies.remote.MoviesData
-import project.movies.searchformovies.remote.RemoteMovies
-import project.movies.searchformovies.remote.api.NetworkingApi
+import project.movies.searchformovies.data.local.MoviesDao
+import project.movies.searchformovies.data.remote.NetworkingApi
+import project.movies.searchformovies.data.remote.dto.RemoteMoviesDto
+import project.movies.searchformovies.domain.model.MoviesData
+import project.movies.searchformovies.utility.Resource
+import retrofit2.Response
 
 class MoviesRepositoryImplTest {
 
@@ -26,39 +29,81 @@ class MoviesRepositoryImplTest {
     }
 
     @Test
-    fun successSearchPopularMovies() {
-        mockSearchOrPopularMovies(true)
+    fun successPopularMoviesState() {
+        mockSearchOrGetPopularMoviesSuccess(true)
         runBlocking {
-            val actual = repository.searchPopularMovies()
-            val expected = MoviesLoadState.Success(emptyList())
+            val actual = repository.searchPopularMovies().javaClass
+            val expected = Resource.Success<List<MoviesData>>(emptyList()).javaClass
             assertEquals(expected, actual)
         }
     }
 
     @Test
-    fun errorSearchPopularMovies() {
+    fun successPopularMoviesData() {
+        mockSearchOrGetPopularMoviesSuccess(true)
         runBlocking {
-            val actual = repository.searchPopularMovies()
-            val expected = MoviesLoadState.Error("error")
+            val actual = repository.searchPopularMovies().data
+            val expected = Resource.Success<List<MoviesData>>(emptyList()).data
             assertEquals(expected, actual)
         }
     }
 
     @Test
-    fun successSearchMovies() {
-        mockSearchOrPopularMovies(false)
+    fun errorPopularMoviesState() {
+        mockSearchOrGetPopularMoviesError(true)
         runBlocking {
-            val actual = repository.searchMovies("text")
-            val expected = MoviesLoadState.Success(emptyList())
+            val actual = repository.searchPopularMovies().javaClass
+            val expected = Resource.Error<List<MoviesData>>(1, "").javaClass
             assertEquals(expected, actual)
         }
     }
 
     @Test
-    fun errorSearchMovies() {
+    fun errorPopularMoviesData() {
+        mockSearchOrGetPopularMoviesError(true)
         runBlocking {
-            val actual = repository.searchMovies("text")
-            val expected = MoviesLoadState.Error("error")
+            val actual = repository.searchPopularMovies().code
+            val expected = Resource.Error<List<MoviesData>>(404, "").code
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun successSearchMoviesState() {
+        mockSearchOrGetPopularMoviesSuccess(false)
+        runBlocking {
+            val actual = repository.searchMovies("text").javaClass
+            val expected = Resource.Success<List<MoviesData>>(emptyList()).javaClass
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun successSearchMoviesData() {
+        mockSearchOrGetPopularMoviesSuccess(false)
+        runBlocking {
+            val actual = repository.searchMovies("text").data
+            val expected = Resource.Success<List<MoviesData>>(emptyList()).data
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun errorSearchMoviesState() {
+        mockSearchOrGetPopularMoviesError(false)
+        runBlocking {
+            val actual = repository.searchMovies("text").javaClass
+            val expected = Resource.Error<List<MoviesData>>(null, null).javaClass
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun errorSearchMoviesData() {
+        mockSearchOrGetPopularMoviesError(false)
+        runBlocking {
+            val actual = repository.searchMovies("text").code
+            val expected = Resource.Error<List<MoviesData>>(404, null).code
             assertEquals(expected, actual)
         }
     }
@@ -73,21 +118,32 @@ class MoviesRepositoryImplTest {
         }
     }
 
-    private fun mockSearchOrPopularMovies(isPopular: Boolean) {
+    private fun mockSearchOrGetPopularMoviesSuccess(isPopular: Boolean) {
         runBlocking {
-            if (isPopular) {
-                Mockito.`when`(networkingApi.popularMovies(any(), any(), any(), any(), any()))
-                    .thenReturn(mockRemoteMovies)
-                    .thenThrow(RuntimeException())
-            } else {
-                Mockito.`when`(networkingApi.searchMovies(any(), any(), any(), any()))
-                    .thenReturn(mockRemoteMovies)
-                    .thenThrow(RuntimeException())
-            }
+            if (isPopular)
+                Mockito.`when`(networkingApi.popularMovies(any(), any(), any(), any()))
+                    .thenReturn(mockSuccessResponse)
+            else
+                Mockito.`when`(networkingApi.searchMovies(any(), any(), any()))
+                    .thenReturn(mockSuccessResponse)
+        }
+    }
+
+    private fun mockSearchOrGetPopularMoviesError(isPopular: Boolean) {
+        runBlocking {
+            if (isPopular)
+                Mockito.`when`(networkingApi.popularMovies(any(), any(), any(), any()))
+                    .thenReturn(mockErrorResponse)
+            else
+                Mockito.`when`(networkingApi.searchMovies(any(), any(), any()))
+                    .thenReturn(mockErrorResponse)
         }
     }
 
     companion object {
-        val mockRemoteMovies = RemoteMovies(1, emptyList())
+        val mockSuccessResponse: Response<RemoteMoviesDto> =
+            Response.success(RemoteMoviesDto(1, emptyList()))
+        val mockErrorResponse: Response<RemoteMoviesDto> =
+            Response.error(404, RealResponseBody("", 1L, Buffer()))
     }
 }

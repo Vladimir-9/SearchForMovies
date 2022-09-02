@@ -11,13 +11,16 @@
 
     <EditText
         android:id="@+id/et_enter_search"
+        style="@style/mainText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/shape_search_movies"
         android:hint="@string/search_by_movie_title"
+        android:inputType="text"
         android:textColorHint="@color/gray"
+        android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@id/bt_search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
