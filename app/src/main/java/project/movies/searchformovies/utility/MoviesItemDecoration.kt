@@ -12,10 +12,11 @@ class MoviesItemDecoration : RecyclerView.ItemDecoration() {
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val dimens = 15.convertPixelFromDp(parent.context)
+        val dimens = 5.convertPixelFromDp(parent.context)
         with(outRect) {
             left = dimens
             right = dimens
+            top = dimens
         }
     }
 }

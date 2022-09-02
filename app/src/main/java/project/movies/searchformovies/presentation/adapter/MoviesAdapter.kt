@@ -4,11 +4,11 @@ import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import project.movies.searchformovies.domain.model.MoviesData
 
-class MoviesAdapter(width: Int = 0, height: Int = 0, itemClick: (movies: MoviesData) -> Unit) :
+class MoviesAdapter(itemClick: (movies: MoviesData) -> Unit) :
     AsyncListDifferDelegationAdapter<MoviesData>(MoviesDiffUtil()) {
 
     init {
-        delegatesManager.addDelegate(MoviesAdapterDelegate(width, height, itemClick))
+        delegatesManager.addDelegate(MoviesAdapterDelegate(itemClick))
     }
 
     class MoviesDiffUtil : DiffUtil.ItemCallback<MoviesData>() {
