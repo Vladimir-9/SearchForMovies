@@ -22,17 +22,16 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        connectionState?.isNetworkLost?.observe(this) { isLost ->
+            if (isLost)
+                toast(getString(R.string.no_internet))
+        }
     }
 
     override fun onStart() {
         super.onStart()
-
         connectionState?.enable()
-        connectionState?.lostNetwork = {
-            runOnUiThread {
-                toast(getString(R.string.no_internet))
-            }
-        }
     }
 
     override fun onStop() {
