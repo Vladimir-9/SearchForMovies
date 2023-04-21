@@ -31,6 +31,7 @@ import project.movies.searchformovies.screens.themes.*
 import project.movies.searchformovies.screens.viewmodel.MoviesLoadState
 import project.movies.searchformovies.screens.viewmodel.MoviesViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MoviesScreen(
     viewModel: MoviesViewModel,
@@ -145,19 +146,21 @@ private fun ScreenMoviesLayout(
                     contentDescription = "icon_search"
                 )
             }
+        },
+        content = {
+            it.hashCode()
+            Column {
+                CreateSearchField(viewModel, coroutineScope, scaffoldState)
+                SearchMoviesLayout(
+                    scaffoldState,
+                    coroutineScope,
+                    viewModel,
+                    changeStateSheet,
+                    getSelectedMovie
+                )
+            }
         }
-    ) {
-        Column {
-            CreateSearchField(viewModel, coroutineScope, scaffoldState)
-            SearchMoviesLayout(
-                scaffoldState,
-                coroutineScope,
-                viewModel,
-                changeStateSheet,
-                getSelectedMovie
-            )
-        }
-    }
+    )
 }
 
 @Composable
@@ -273,6 +276,7 @@ private fun ButtonSearch(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListMovies(
     listMovies: List<MoviesData>,
