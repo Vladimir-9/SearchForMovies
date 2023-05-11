@@ -16,4 +16,9 @@ interface NetworkingApi {
     suspend fun detailDesc(
         @Query("i") id: String,
     ): Response<DetailsDrinkDto>
+
+    @GET("/api/json/v1/1/search.php")
+    suspend fun searchDrinks(
+        @Query("s") searchQuery: String,
+    ): Response<DrinksDto>
 }

@@ -7,8 +7,11 @@ import project.movies.searchformovies.data.mapper.toDetailsDrink
 import project.movies.searchformovies.data.mapper.toDrinksData
 import project.movies.searchformovies.data.mapper.toMoviesData
 import project.movies.searchformovies.data.remote.NetworkingApi
+import project.movies.searchformovies.data.remote.dto.DrinksDto
+import project.movies.searchformovies.domain.model.DataDetailsDrink
 import project.movies.searchformovies.domain.model.DrinksData
 import project.movies.searchformovies.domain.repositories.DrinksRepository
+import project.movies.searchformovies.utility.Resource
 import project.movies.searchformovies.utility.toResource
 import javax.inject.Inject
 
@@ -35,7 +38,11 @@ class DrinksRepositoryImpl @Inject constructor(
     }
 
     override suspend fun detailDesc(id: String) = networkingApi.detailDesc(id).toResource {
-            it?.drinks?.map { detail -> detail.toDataDetailsDrink() }.orEmpty()
-        }
+        it?.drinks?.map { detail -> detail.toDataDetailsDrink() }.orEmpty()
+    }
 
+    override suspend fun searchDrinks(searchQuery: String): Resource<List<DrinksData>> =
+        networkingApi.searchDrinks(searchQuery).toResource { drink ->
+            drink?.drinks?.map { it.toDrinksData() }.orEmpty()
+        }
 }

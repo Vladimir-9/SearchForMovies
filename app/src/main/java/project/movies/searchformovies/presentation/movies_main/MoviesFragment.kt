@@ -35,7 +35,7 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
         viewBinding.etEnterSearch.doAfterTextChanged {
             if (it?.isEmpty() == true) {
-//                viewModel.getSearchMovies("")
+                viewModel.getSearchMovies("")
                 responseMovies = ""
             }
         }
@@ -53,7 +53,7 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
         if (searchQuestion.isNotEmpty() && responseMovies != searchQuestion) {
             responseMovies = searchQuestion
-//            viewModel.getSearchMovies(searchQuestion)
+            viewModel.getSearchMovies(searchQuestion)
         } else {
             requireContext().toast(getString(R.string.enter_movie))
         }

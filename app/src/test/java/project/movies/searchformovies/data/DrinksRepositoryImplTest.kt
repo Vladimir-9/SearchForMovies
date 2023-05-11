@@ -30,7 +30,7 @@ class DrinksRepositoryImplTest {
 
     @Test
     fun successPopularMoviesState() {
-        mockSearchOrGetPopularMoviesSuccess()
+        mockSearchOrGetPopularMoviesSuccess(true)
         runBlocking {
             val actual = repository.alcoholicDrinks().javaClass
             val expected = Resource.Success<List<DrinksData>>(emptyList()).javaClass
@@ -40,7 +40,7 @@ class DrinksRepositoryImplTest {
 
     @Test
     fun successPopularMoviesData() {
-        mockSearchOrGetPopularMoviesSuccess()
+        mockSearchOrGetPopularMoviesSuccess(true)
         runBlocking {
             val actual = repository.alcoholicDrinks().data
             val expected = Resource.Success<List<DrinksData>>(emptyList()).data
@@ -50,7 +50,7 @@ class DrinksRepositoryImplTest {
 
     @Test
     fun errorPopularMoviesState() {
-        mockSearchOrGetPopularMoviesError()
+        mockSearchOrGetPopularMoviesError(true)
         runBlocking {
             val actual = repository.alcoholicDrinks().javaClass
             val expected = Resource.Error<List<DrinksData>>(1, "").javaClass
@@ -60,10 +60,50 @@ class DrinksRepositoryImplTest {
 
     @Test
     fun errorPopularMoviesData() {
-        mockSearchOrGetPopularMoviesError()
+        mockSearchOrGetPopularMoviesError(true)
         runBlocking {
             val actual = repository.alcoholicDrinks().code
             val expected = Resource.Error<List<DrinksData>>(404, "").code
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun successSearchMoviesState() {
+        mockSearchOrGetPopularMoviesSuccess(false)
+        runBlocking {
+            val actual = repository.searchDrinks("text").javaClass
+            val expected = Resource.Success<List<DrinksData>>(emptyList()).javaClass
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun successSearchMoviesData() {
+        mockSearchOrGetPopularMoviesSuccess(false)
+        runBlocking {
+            val actual = repository.searchDrinks("text").data
+            val expected = Resource.Success<List<DrinksData>>(emptyList()).data
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun errorSearchMoviesState() {
+        mockSearchOrGetPopularMoviesError(false)
+        runBlocking {
+            val actual = repository.searchDrinks("text").javaClass
+            val expected = Resource.Error<List<DrinksData>>(null, null).javaClass
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun errorSearchMoviesData() {
+        mockSearchOrGetPopularMoviesError(false)
+        runBlocking {
+            val actual = repository.searchDrinks("text").code
+            val expected = Resource.Error<List<DrinksData>>(404, null).code
             assertEquals(expected, actual)
         }
     }
@@ -78,15 +118,25 @@ class DrinksRepositoryImplTest {
         }
     }
 
-    private fun mockSearchOrGetPopularMoviesSuccess() {
+    private fun mockSearchOrGetPopularMoviesSuccess(isPopular: Boolean) {
         runBlocking {
-            Mockito.`when`(networkingApi.alcoholicDrinks(any())).thenReturn(mockSuccessResponse)
+            if (isPopular)
+                Mockito.`when`(networkingApi.alcoholicDrinks(any()))
+                    .thenReturn(mockSuccessResponse)
+            else
+                Mockito.`when`(networkingApi.searchDrinks(any()))
+                    .thenReturn(mockSuccessResponse)
         }
     }
 
-    private fun mockSearchOrGetPopularMoviesError() {
+    private fun mockSearchOrGetPopularMoviesError(isPopular: Boolean) {
         runBlocking {
-            Mockito.`when`(networkingApi.alcoholicDrinks(any())).thenReturn(mockErrorResponse)
+            if (isPopular)
+                Mockito.`when`(networkingApi.alcoholicDrinks(any()))
+                    .thenReturn(mockErrorResponse)
+            else
+                Mockito.`when`(networkingApi.searchDrinks(any()))
+                    .thenReturn(mockErrorResponse)
         }
     }
 

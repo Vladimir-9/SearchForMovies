@@ -11,4 +11,5 @@ interface DrinksRepository {
     suspend fun getAllFavoritesMovie(): List<DrinksData>
     suspend fun removeFavoritesMovie(favoriteId: String)
     suspend fun detailDesc(id: String): Resource<List<DataDetailsDrink>>
+    suspend fun searchDrinks(searchQuery: String): Resource<List<DrinksData>>
 }

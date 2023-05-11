@@ -17,7 +17,7 @@
         android:layout_marginHorizontal="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/shape_search_movies"
-        android:hint="@string/search_by_movie_title"
+        android:hint="@string/search_by_drinks_title"
         android:inputType="text"
         android:textColorHint="@color/gray"
         android:textSize="18sp"

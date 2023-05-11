@@ -38,13 +38,15 @@ class MoviesViewModel @Inject constructor(private val repository: DrinksReposito
         }
     }
 
-//    private fun searchMovies(searchResponse: String) {
-//        viewModelScope.launch(exceptionHandler) {
-//            _viewState.postValue(_viewState.value?.copy(isLoading = true))
-//            val resListMovies = repository.searchMovies(searchResponse)
-//            setResult(resListMovies)
-//        }
-//    }
+    private fun searchMovies(searchRequest: String) {
+        viewModelScope.launch(exceptionHandler) {
+            
+            _viewState.postValue(_viewState.value?.copy(isLoading = true))
+            
+            val resListMovies = repository.searchDrinks(searchRequest)
+            setResult(resListMovies)
+        }
+    }
 
     private fun setResult(resListMovies: Resource<List<DrinksData>>){
         when (resListMovies) {
@@ -60,8 +62,8 @@ class MoviesViewModel @Inject constructor(private val repository: DrinksReposito
         }
     }
 
-//    fun getSearchMovies(searchResponse: String) {
-//        if (searchResponse.isNotBlank()) searchMovies(searchResponse)
-//        else getAlcoholicDrinks()
-//    }
+    fun getSearchMovies(searchRequest: String) {
+        if (searchRequest.isNotBlank()) searchMovies(searchRequest)
+        else getAlcoholicDrinks()
+    }
 }
