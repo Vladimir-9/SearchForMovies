@@ -8,12 +8,10 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.ItemMovieBinding
-import project.movies.searchformovies.domain.model.MoviesData
-import project.movies.searchformovies.utility.DateFormat
-import project.movies.searchformovies.utility.dateConverter
+import project.movies.searchformovies.domain.model.DrinksData
 
-class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit) :
-    AbsListItemAdapterDelegate<MoviesData, MoviesData, MoviesAdapterDelegate.ViewHolder>() {
+class DrinksAdapterDelegate(private val itemClick: (drinks: DrinksData) -> Unit) :
+    AbsListItemAdapterDelegate<DrinksData, DrinksData, DrinksAdapterDelegate.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,7 +19,7 @@ class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit)
     }
 
     override fun onBindViewHolder(
-        item: MoviesData,
+        item: DrinksData,
         holder: ViewHolder,
         payloads: MutableList<Any>
     ) {
@@ -29,51 +27,40 @@ class MoviesAdapterDelegate(private val itemClick: (movies: MoviesData) -> Unit)
     }
 
     override fun isForViewType(
-        item: MoviesData,
-        items: MutableList<MoviesData>,
+        item: DrinksData,
+        items: MutableList<DrinksData>,
         position: Int
     ): Boolean {
         return true
     }
 
-    class ViewHolder(itemView: View, private val itemClick: (movies: MoviesData) -> Unit) :
+    class ViewHolder(itemView: View, private val itemClick: (drinks: DrinksData) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
 
         private lateinit var viewBinding: ItemMovieBinding
 
-        fun bind(movies: MoviesData) {
+        fun bind(drinks: DrinksData) {
             viewBinding = ItemMovieBinding.bind(itemView)
             with(viewBinding) {
                 ivMovie.clipToOutline = true
-                twTitleMovie.text = movies.title
-                twDescription.text = movies.description
-
-                val dateRelease = movies.releaseDate.dateConverter(
-                    DateFormat.YEAR_MONTH_DAY,
-                    DateFormat.DAY_FULL_MONTH_YEAR
-                )
-                val concatText = "${root.context.getString(R.string.release)} $dateRelease"
-                twReleaseDate.text = concatText
+                twTitleMovie.text = drinks.strDrink
+                twDescription.text = drinks.strDrink
             }
 
             Glide
                 .with(itemView)
-                .load(PATH_LOAD_IMAGE + movies.posterPath)
+                .load(drinks.strDrinkThumb)
                 .placeholder(R.drawable.ic_movie)
                 .error(R.drawable.ic_not_poster)
                 .into(viewBinding.ivMovie)
 
-            sendMovie(movies)
+            sendMovie(drinks)
         }
 
-        private fun sendMovie(movies: MoviesData) {
+        private fun sendMovie(movies: DrinksData) {
             itemView.setOnClickListener {
                 itemClick(movies)
             }
         }
-    }
-
-    companion object {
-        const val PATH_LOAD_IMAGE = "https://image.tmdb.org/t/p/w500"
     }
 }

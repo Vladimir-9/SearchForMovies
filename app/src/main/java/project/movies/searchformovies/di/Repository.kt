@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import project.movies.searchformovies.domain.repositories.MoviesRepository
-import project.movies.searchformovies.data.MoviesRepositoryImpl
+import project.movies.searchformovies.domain.repositories.DrinksRepository
+import project.movies.searchformovies.data.DrinksRepositoryImpl
 import javax.inject.Singleton
 
 @Module
@@ -14,5 +14,5 @@ abstract class Repository {
 
     @Binds
     @Singleton
-    abstract fun provideRepository(impl: MoviesRepositoryImpl): MoviesRepository
+    abstract fun provideRepository(impl: DrinksRepositoryImpl): DrinksRepository
 }

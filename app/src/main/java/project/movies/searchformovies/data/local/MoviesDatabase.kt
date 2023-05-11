@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import project.movies.searchformovies.data.local.MoviesDatabase.Companion.DB_VERSION
 
 @Database(
-    entities = [MoviesEntity::class],
+    entities = [DrinksEntity::class],
     version = DB_VERSION
 )
 

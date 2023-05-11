@@ -11,7 +11,7 @@ import com.leinardi.android.speeddial.SpeedDialActionItem
 import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.FragmentMoviesBinding
-import project.movies.searchformovies.presentation.adapter.MoviesAdapter
+import project.movies.searchformovies.presentation.adapter.DrinksAdapter
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 import project.movies.searchformovies.utility.hideKeyboard
@@ -22,7 +22,7 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
     private val viewModel: MoviesViewModel by viewModels()
     private var viewBinding: FragmentMoviesBinding by autoCleared()
-    private var adapterMovies: MoviesAdapter by autoCleared()
+    private var adapterMovies: DrinksAdapter by autoCleared()
     private var responseMovies = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,7 +35,7 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
         viewBinding.etEnterSearch.doAfterTextChanged {
             if (it?.isEmpty() == true) {
-                viewModel.getSearchMovies("")
+//                viewModel.getSearchMovies("")
                 responseMovies = ""
             }
         }
@@ -53,14 +53,14 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
         if (searchQuestion.isNotEmpty() && responseMovies != searchQuestion) {
             responseMovies = searchQuestion
-            viewModel.getSearchMovies(searchQuestion)
+//            viewModel.getSearchMovies(searchQuestion)
         } else {
             requireContext().toast(getString(R.string.enter_movie))
         }
     }
 
     private fun initRecyclerView() {
-        adapterMovies = MoviesAdapter { movies ->
+        adapterMovies = DrinksAdapter { movies ->
             val action = MoviesFragmentDirections.actionDisplayingMoviesToDetailMoviesDialog(
                 movies
             )
@@ -78,8 +78,8 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
             viewBinding.progressBar.isVisible = viewState.isLoading
             isEnableButton(viewState.isLoading.not())
 
-            if (viewState.listMovies.isNotEmpty())
-                adapterMovies.items = viewState.listMovies
+            if (viewState.listDrinks.isNotEmpty())
+                adapterMovies.items = viewState.listDrinks
 
             val isError = viewState.error.isNotEmpty()
             visibleElementAfterError(isError)

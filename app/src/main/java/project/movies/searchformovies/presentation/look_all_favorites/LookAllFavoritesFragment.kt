@@ -9,8 +9,8 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
 import project.movies.searchformovies.databinding.FragmentLookAllFavoritesBinding
-import project.movies.searchformovies.domain.model.MoviesData
-import project.movies.searchformovies.presentation.adapter.MoviesAdapter
+import project.movies.searchformovies.domain.model.DrinksData
+import project.movies.searchformovies.presentation.adapter.DrinksAdapter
 import project.movies.searchformovies.utility.MoviesItemDecoration
 import project.movies.searchformovies.utility.autoCleared
 import project.movies.searchformovies.utility.getAlertDialog
@@ -20,7 +20,7 @@ import project.movies.searchformovies.utility.getTextWithColor
 class LookAllFavoritesFragment : Fragment(R.layout.fragment_look_all_favorites) {
 
     private var viewBinding: FragmentLookAllFavoritesBinding by autoCleared()
-    private var adapterMovies: MoviesAdapter by autoCleared()
+    private var adapterMovies: DrinksAdapter by autoCleared()
     private val viewModel: LookAllFavoritesViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,7 +32,7 @@ class LookAllFavoritesFragment : Fragment(R.layout.fragment_look_all_favorites) 
     }
 
     private fun initRecyclerView() {
-        adapterMovies = MoviesAdapter { favoritesMovie ->
+        adapterMovies = DrinksAdapter { favoritesMovie ->
             createDialog(favoritesMovie)
         }
         with(viewBinding.rwFavoritesMovies) {
@@ -49,9 +49,9 @@ class LookAllFavoritesFragment : Fragment(R.layout.fragment_look_all_favorites) 
         }
     }
 
-    private fun createDialog(favoritesMovie: MoviesData) {
+    private fun createDialog(favoritesMovie: DrinksData) {
         val title =
-            SpannableString("${getString(R.string.do_you_want_delete)} - \n${favoritesMovie.title} ?")
+            SpannableString("${getString(R.string.do_you_want_delete)} - \n${favoritesMovie.strDrink} ?")
 
         requireContext().getAlertDialog(
             title = requireContext().getTextWithColor(title, R.color.gray),
@@ -59,7 +59,7 @@ class LookAllFavoritesFragment : Fragment(R.layout.fragment_look_all_favorites) 
             textNegative = R.string.cancel,
             background = R.drawable.shape_image_movie
         ) { _, _ ->
-            viewModel.removeFavoritesMovie(favoritesMovie.id)
+            viewModel.removeFavoritesMovie(favoritesMovie.idDrink)
         }
     }
 }

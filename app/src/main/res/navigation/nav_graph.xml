@@ -23,8 +23,8 @@
         android:label="DetailMoviesDialog"
         tools:layout="@layout/dialog_detail_information">
         <argument
-            android:name="movie"
-            app:argType="project.movies.searchformovies.domain.model.MoviesData" />
+            android:name="drinksData"
+            app:argType="project.movies.searchformovies.domain.model.DrinksData" />
     </dialog>
     <fragment
         android:id="@+id/lookAllFavoritesFragment"

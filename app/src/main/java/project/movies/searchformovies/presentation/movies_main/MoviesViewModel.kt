@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.domain.model.MoviesData
-import project.movies.searchformovies.domain.model.MoviesViewState
-import project.movies.searchformovies.domain.repositories.MoviesRepository
+import project.movies.searchformovies.domain.model.DrinksData
+import project.movies.searchformovies.domain.model.DrinksViewState
+import project.movies.searchformovies.domain.repositories.DrinksRepository
 import project.movies.searchformovies.utility.Resource
 import javax.inject.Inject
 
 @HiltViewModel
-class MoviesViewModel @Inject constructor(private val repository: MoviesRepository) : ViewModel() {
+class MoviesViewModel @Inject constructor(private val repository: DrinksRepository) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         _viewState.postValue(_viewState.value?.copy(
@@ -23,33 +23,33 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
             ))
     }
 
-    private val _viewState = MutableLiveData(MoviesViewState())
-    val viewState: LiveData<MoviesViewState> = _viewState
+    private val _viewState = MutableLiveData(DrinksViewState())
+    val viewState: LiveData<DrinksViewState> = _viewState
 
     init {
-        getPopularMovies()
+        getAlcoholicDrinks()
     }
 
-    private fun getPopularMovies() {
+    private fun getAlcoholicDrinks() {
         viewModelScope.launch(exceptionHandler) {
             _viewState.postValue(_viewState.value?.copy(isLoading = true))
-            val resListMovies = repository.searchPopularMovies()
-            setResult(resListMovies)
+            val resListDrinks = repository.alcoholicDrinks()
+            setResult(resListDrinks)
         }
     }
 
-    private fun searchMovies(searchResponse: String) {
-        viewModelScope.launch(exceptionHandler) {
-            _viewState.postValue(_viewState.value?.copy(isLoading = true))
-            val resListMovies = repository.searchMovies(searchResponse)
-            setResult(resListMovies)
-        }
-    }
+//    private fun searchMovies(searchResponse: String) {
+//        viewModelScope.launch(exceptionHandler) {
+//            _viewState.postValue(_viewState.value?.copy(isLoading = true))
+//            val resListMovies = repository.searchMovies(searchResponse)
+//            setResult(resListMovies)
+//        }
+//    }
 
-    private fun setResult(resListMovies: Resource<List<MoviesData>>){
+    private fun setResult(resListMovies: Resource<List<DrinksData>>){
         when (resListMovies) {
             is Resource.Success -> _viewState.postValue(_viewState.value?.copy(
-                listMovies = resListMovies.data.orEmpty(),
+                listDrinks = resListMovies.data.orEmpty(),
                 isLoading = false,
                 error = ""
             ))
@@ -60,8 +60,8 @@ class MoviesViewModel @Inject constructor(private val repository: MoviesReposito
         }
     }
 
-    fun getSearchMovies(searchResponse: String) {
-        if (searchResponse.isNotBlank()) searchMovies(searchResponse)
-        else getPopularMovies()
-    }
+//    fun getSearchMovies(searchResponse: String) {
+//        if (searchResponse.isNotBlank()) searchMovies(searchResponse)
+//        else getAlcoholicDrinks()
+//    }
 }

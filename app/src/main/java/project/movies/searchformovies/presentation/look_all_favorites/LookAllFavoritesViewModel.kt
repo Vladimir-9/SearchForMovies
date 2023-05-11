@@ -7,22 +7,22 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import project.movies.searchformovies.domain.model.MoviesData
-import project.movies.searchformovies.domain.repositories.MoviesRepository
+import project.movies.searchformovies.domain.model.DrinksData
+import project.movies.searchformovies.domain.repositories.DrinksRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class LookAllFavoritesViewModel @Inject constructor(
-    private val repository: MoviesRepository
+    private val repository: DrinksRepository
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Timber.e(throwable)
     }
 
-    private val _favoritesMovies = MutableLiveData<List<MoviesData>>()
-    val favoritesMovies: LiveData<List<MoviesData>> = _favoritesMovies
+    private val _favoritesMovies = MutableLiveData<List<DrinksData>>()
+    val favoritesMovies: LiveData<List<DrinksData>> = _favoritesMovies
 
     fun getAllFavoritesMovie() {
         viewModelScope.launch(exceptionHandler) {
@@ -30,7 +30,7 @@ class LookAllFavoritesViewModel @Inject constructor(
         }
     }
 
-    fun removeFavoritesMovie(favoriteId: Int) {
+    fun removeFavoritesMovie(favoriteId: String) {
         viewModelScope.launch(exceptionHandler) {
             repository.removeFavoritesMovie(favoriteId)
             getAllFavoritesMovie()

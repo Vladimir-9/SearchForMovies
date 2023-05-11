@@ -13,7 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import project.movies.searchformovies.R
 import project.movies.searchformovies.data.mapper.toMoviesEntity
 import project.movies.searchformovies.databinding.DialogDetailInformationBinding
-import project.movies.searchformovies.presentation.adapter.MoviesAdapterDelegate.Companion.PATH_LOAD_IMAGE
+import project.movies.searchformovies.domain.model.DataDetailsDrink
+import project.movies.searchformovies.utility.Resource
 import project.movies.searchformovies.utility.autoCleared
 
 @AndroidEntryPoint
@@ -40,20 +41,52 @@ class DetailInformationDialog : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.ivMovie.clipToOutline = true
-        Glide.with(view)
-            .load(PATH_LOAD_IMAGE + args.movie.backdropPath)
-            .placeholder(R.drawable.ic_movie)
-            .error(R.drawable.ic_not_poster)
-            .into(viewBinding.ivMovie)
-        viewBinding.twDescriptionMovie.text = args.movie.description
+
+        observeViewModel()
+        viewModel.detailDesc(args.drinksData.idDrink)
 
         viewBinding.btFavourites.setOnClickListener {
             saveFavoritesMovie()
         }
     }
 
+    private fun observeViewModel() {
+        viewModel.detailDesc.observe(viewLifecycleOwner) { res ->
+            when (res) {
+                is Resource.Success -> {
+
+                    val detailDesc = res.data?.get(0)
+
+                    Glide.with(this)
+                        .load(detailDesc?.strDrinkThumb)
+                        .placeholder(R.drawable.ic_movie)
+                        .error(R.drawable.ic_not_poster)
+                        .into(viewBinding.ivMovie)
+
+                    viewBinding.twTitle.text = detailDesc?.strDrink
+                    viewBinding.twDescriptionMovie.text = detailDesc?.strInstructions
+                    viewBinding.twIngredients.text = getAllIngredients(detailDesc)
+
+                }
+                is Resource.Error -> Unit
+            }
+        }
+    }
+
+    private fun getAllIngredients(ingr: DataDetailsDrink?): String {
+        if (ingr == null) return ""
+
+        val str = StringBuilder()
+
+        ingr.allIngredientsList.forEach { ingredient ->
+            if (ingredient.isNotBlank()) str.append(" - $ingredient \n")
+        }
+
+        return str.toString()
+    }
+
     private fun saveFavoritesMovie() {
-        viewModel.saveFavoritesMovie(args.movie.toMoviesEntity())
+        viewModel.saveFavoritesMovie(args.drinksData.toMoviesEntity())
         findNavController().popBackStack()
     }
 }

@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import project.movies.searchformovies.BuildConfig
 import project.movies.searchformovies.data.remote.NetworkingApi
 import project.movies.searchformovies.utility.ApiInterceptor
 import retrofit2.Retrofit
@@ -29,7 +30,7 @@ class NetworkingModule {
     @Singleton
     fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .client(okHttpClient)
             .build()
